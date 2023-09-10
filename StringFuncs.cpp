@@ -7,7 +7,7 @@ const char** BuildPtrArr(const char* text, const char lim, size_t* arrSize)
 
     static const size_t STD_SIZE = 256; 
 
-    const char** ptrArr = (const char**) calloc(STD_SIZE, sizeof(char));
+    const char** ptrArr = (const char**) calloc(STD_SIZE, sizeof(*ptrArr));
     size_t posInPtrArr = 0;
 
     assert(STD_SIZE > 0);
@@ -21,15 +21,23 @@ const char** BuildPtrArr(const char* text, const char lim, size_t* arrSize)
     {
         if (*text == lim)
         {
-            printf("%d: %p\n", posInPtrArr, text + 1);
             if (posInPtrArr >= ptrArrSz)
             {
-                printf("HERE1\n");
+                //printf("HERE1\n");
                 ptrArrSz <<= 1;
-                printf("%p\n", ptrArr);
-                ptrArr = (const char**) realloc(ptrArr, ptrArrSz * sizeof(char));
+                //printf("%p\n", ptrArr);
+                //printf("%d\n", ptrArrSz);
+
+                /*for (size_t i = 0; i < posInPtrArr; ++i)
+                {
+                    printf("%d: pointer: %p ", i, ptrArr[i]);
+                    MyPuts(ptrArr[i], '\n');
+                }*/
+
+                const char** tmp = (const char**) realloc(ptrArr, ptrArrSz * sizeof(*ptrArr));
                 //printf("%p\n", tmp);
-                /*if (tmp == nullptr)
+
+                if (tmp == nullptr)
                 {
                     free(ptrArr);
                     ptrArr = nullptr;
@@ -37,13 +45,21 @@ const char** BuildPtrArr(const char* text, const char lim, size_t* arrSize)
                     return nullptr;
                 }
 
-                ptrArr = tmp;*/
+                ptrArr = tmp;
+
+                /*for (size_t i = 0; i < posInPtrArr; ++i)
+                {
+                    printf("%d: pointer: %p ", i, ptrArr[i]);
+                    MyPuts(ptrArr[i], '\n');
+                }*/
             }
-            printf("HERE2\n");
+            //printf("HERE2\n");
             assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);
 
             ptrArr[posInPtrArr] = text + 1;
+            //printf("%d: %p\n", posInPtrArr, text + 1);
             ++posInPtrArr;
+
         }
         ++text;
     }

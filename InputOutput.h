@@ -1,3 +1,6 @@
+#ifndef INPUT_OUTPUT_H
+#define INPUT_OUTPUT_H
+
 #include <assert.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -9,3 +12,5 @@ void PrintText(const char* const* const ptrArr, const size_t sz);
 size_t GetFileSize(const char* const fileName);
 
 void MyPuts(const char *str, const char lim);
+
+#endif // INPUT_OUTPUT_H

@@ -1,21 +1,20 @@
 #include "InputOutput.h"
 
-int ReadTextAndParse(const char* const fileName, 
-                     char** text, const char*** ptrArr, size_t* ptrArrSz)
+//------------------------------------------------------------------------------------------------
+
+int ReadTextAndParse(TextType* text)
 {
-    assert(fileName);  
     assert(text);
-    assert(ptrArr);
-    assert(ptrArrSz);
+    assert(text->fileName);
 
-    *text = ReadText(fileName);
+    text->text = ReadText(text->fileName);
 
-    if (*text == nullptr)
+    if (text->text == nullptr)
         return -1;
     
-    *ptrArr = BuildPtrArr(*text, '\n', ptrArrSz);
+    text->ptrArr = BuildPtrArr(text->text, '\n', &text->ptrArrSz);
 
-    if (*ptrArr == nullptr)
+    if (text->ptrArr == nullptr)
     {
         fprintf(stderr, RedText("Error build pointers array\n"));
         return -1;
@@ -24,13 +23,15 @@ int ReadTextAndParse(const char* const fileName,
     return 0;
 }
 
+//------------------------------------------------------------------------------------------------
+
 char* ReadText(const char* const fileName)
 {
     assert(fileName);
 
     off_t tmpFileSize = GetFileSize(fileName);
 
-    if (tmpFileSize == -1)
+    if (tmpFileSize != 0)
     {
         fprintf(stderr, RedText("Error getting file size %s\n"), fileName);
         return nullptr;
@@ -61,8 +62,11 @@ char* ReadText(const char* const fileName)
 
     text[fileSize - 1] = '\0';
 
+    fclose(inStream);
     return text;
 }
+
+//------------------------------------------------------------------------------------------------
 
 int PrintText(const char* const* const ptrArr, const size_t sz)
 {
@@ -81,6 +85,8 @@ int PrintText(const char* const* const ptrArr, const size_t sz)
     return 0;
 }
 
+//------------------------------------------------------------------------------------------------
+
 off_t GetFileSize(const char* const fileName)
 {
     assert(fileName);
@@ -92,6 +98,8 @@ off_t GetFileSize(const char* const fileName)
     if (statError) return -1;
     return fileStats.st_size;
 }
+
+//------------------------------------------------------------------------------------------------
 
 int MyPuts(const char* str, const char separator)
 {
@@ -109,3 +117,5 @@ int MyPuts(const char* str, const char separator)
 
     return putchar('\n');
 }
+
+//------------------------------------------------------------------------------------------------

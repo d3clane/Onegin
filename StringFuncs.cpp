@@ -1,5 +1,7 @@
 #include "StringFuncs.h"
 
+//------------------------------------------------------------------------------------------------
+
 const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize)
 {
     assert(text);
@@ -13,8 +15,9 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
         return nullptr;
     
     size_t posInPtrArr = 0;
-
+#pragma GCC diagnostic ignored "-Wtype-limits"
     assert(0 <= posInPtrArr && posInPtrArr < linesCnt);
+#pragma GCC diagnostic warning "-Wtype-limits"
     ptrArr[posInPtrArr] = text;
     ++posInPtrArr;
 
@@ -26,7 +29,9 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
             //printf("HERE %d\n", __LINE__);
             //printf("%d, %d\n", posInPtrArr, ptrArrSz);
 
-            assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);            
+#pragma GCC diagnostic ignored "-Wtype-limits"
+            assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);     
+#pragma GCC diagnostic warning "-Wtype-limits"       
             ptrArr[posInPtrArr] = text + 1;
             
             //printf("%d: %p\n", posInPtrArr, text + 1);
@@ -39,6 +44,8 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
     *arrSize = posInPtrArr;
     return ptrArr;
 }
+
+//------------------------------------------------------------------------------------------------
 
 size_t CntChrInStr(const char* str, const char ch)
 {
@@ -60,3 +67,5 @@ size_t CntChrInStr(const char* str, const char ch)
 
     return cnt;
 }
+
+//------------------------------------------------------------------------------------------------

@@ -7,26 +7,20 @@
 
 int main()
 {
-    //setbuf(stdout, nullptr);
-    static const char* const fileName = "Onegin.txt"; 
-    char *text = nullptr;
-    const char **ptrArr = nullptr;
-    size_t ptrArrSz = 0;
+    TextType text = 
+    {
+        .fileName = "Onegin.txt",
+        .text = nullptr,
+        .ptrArr = nullptr,
+        .ptrArrSz = 0,
+    };
 
-    if (ReadTextAndParse(fileName, &text, &ptrArr, &ptrArrSz) == -1)
+    if (ReadTextAndParse(&text) != 0)
         return -1;
 
-    PrintText(ptrArr, ptrArrSz);
-
-    if (PrintText(ptrArr, ptrArrSz) == EOF)
+    if (PrintText(text.ptrArr, text.ptrArrSz) != 0)
     {
         fprintf(stderr, RedText("Error printing to output\n"));
         return -1;
     }
-    
-    free(ptrArr);
-    ptrArr = nullptr;
-
-    free(text);
-    text = nullptr;
 }

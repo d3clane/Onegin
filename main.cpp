@@ -1,35 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Colors.h"
 #include "InputOutput.h"
 #include "StringFuncs.h"
 
 int main()
 {
-    setbuf(stdout, nullptr);
+    //setbuf(stdout, nullptr);
     static const char* const fileName = "Onegin.txt"; 
+    char *text = nullptr;
+    const char **ptrArr = nullptr;
+    size_t ptrArrSz = 0;
 
-    FILE* const oneginInput = fopen(fileName, "r");
-
-    if (oneginInput == nullptr)
+    if (ReadTextAndParse(fileName, &text, &ptrArr, &ptrArrSz) == -1)
         return -1;
 
-    const size_t fileSize = GetFileSize(fileName);
+    PrintText(ptrArr, ptrArrSz);
 
-    //printf("%d\n", fileSize);
-
-    char* text = (char *) calloc(fileSize + 1, sizeof(char));
-
-    if (text == nullptr)
+    if (PrintText(ptrArr, ptrArrSz) == EOF)
+    {
+        fprintf(stderr, RedText("Error printing to output\n"));
         return -1;
-
-    ReadText(text, fileSize + 1, oneginInput);
-
-    size_t sz = 0;
-    const char** ptrArr = BuildPtrArr(text, '\n', &sz);
+    }
     
-    PrintText(ptrArr, sz);
-
     free(ptrArr);
     ptrArr = nullptr;
 

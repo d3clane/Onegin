@@ -1,10 +1,58 @@
 #include "InputOutput.h"
 
-char* ReadText(char* const text, const size_t fileSize, FILE* const inStream)
+int ReadTextAndParse(const char* const fileName, 
+                     char** text, const char*** ptrArr, size_t* ptrArrSz)
 {
+    assert(fileName);  
     assert(text);
-    assert(fileSize > 0);
-    assert(inStream);
+    assert(ptrArr);
+    assert(ptrArrSz);
+
+    *text = ReadText(fileName);
+
+    if (*text == nullptr)
+        return -1;
+    
+    *ptrArr = BuildPtrArr(*text, '\n', ptrArrSz);
+
+    if (*ptrArr == nullptr)
+    {
+        fprintf(stderr, RedText("Error build pointers array\n"));
+        return -1;
+    }
+
+    return 0;
+}
+
+char* ReadText(const char* const fileName)
+{
+    assert(fileName);
+
+    off_t tmpFileSize = GetFileSize(fileName);
+
+    if (tmpFileSize == -1)
+    {
+        fprintf(stderr, RedText("Error getting file size %s\n"), fileName);
+        return nullptr;
+    }
+
+    const size_t fileSize = (size_t) tmpFileSize + 1;
+
+    char* text = (char*) calloc(fileSize, sizeof(*text)); 
+
+    if (text == nullptr)
+    {
+        fprintf(stderr, RedText("Error callocing memory for text\n"));
+        return text;
+    }
+
+    FILE* inStream = fopen(fileName, "rb");
+
+    if (inStream == nullptr)
+    {
+        fprintf(stderr, RedText("Error opening file %s\n"), fileName);
+        return nullptr;
+    }
 
     size_t nRead = fread(text, sizeof(char), fileSize, inStream);
     
@@ -16,7 +64,7 @@ char* ReadText(char* const text, const size_t fileSize, FILE* const inStream)
     return text;
 }
 
-void PrintText(const char* const* const ptrArr, const size_t sz)
+int PrintText(const char* const* const ptrArr, const size_t sz)
 {
     assert(ptrArr);
     assert(sz > 0);
@@ -24,30 +72,40 @@ void PrintText(const char* const* const ptrArr, const size_t sz)
     for (size_t i = 0; i < sz; ++i)
     {
         assert(i < sz);
-        MyPuts(ptrArr[i], '\n');
+        int printingError = MyPuts(ptrArr[i], '\n');
+
+        if (printingError == EOF)
+            return printingError;
     }
+
+    return 0;
 }
 
-size_t GetFileSize(const char* const fileName)
+off_t GetFileSize(const char* const fileName)
 {
     assert(fileName);
 
     struct stat fileStats = {0};
 
-    stat(fileName, &fileStats);
+    int statError = stat(fileName, &fileStats);
 
-    return (size_t) fileStats.st_size; //что за off_t
+    if (statError) return -1;
+    return fileStats.st_size;
 }
 
-void MyPuts(const char *str, const char lim)
+int MyPuts(const char* str, const char separator)
 {
     assert(str);
 
-    while (*str != lim && *str != '\0')
+    while (*str != separator && *str != '\0')
     {
-        putchar(*str);
+        int printingError = putchar(*str);
+
+        if (printingError == EOF)
+            return printingError;
+        
         ++str;
     }
 
-    putchar('\n');
+    return putchar('\n');
 }

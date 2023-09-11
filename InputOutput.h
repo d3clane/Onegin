@@ -5,12 +5,18 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-char* ReadText(char* const text, const size_t fileSize, FILE* const inStream);
+#include "Colors.h"
+#include "StringFuncs.h"
 
-void PrintText(const char* const* const ptrArr, const size_t sz);
+int ReadTextAndParse(const char* const fileName,
+                     char** text, const char*** ptrArr, size_t* ptrArrSz);
 
-size_t GetFileSize(const char* const fileName);
+char* ReadText(const char* const fileName);
 
-void MyPuts(const char *str, const char lim);
+int PrintText(const char* const* const ptrArr, const size_t sz);
+
+off_t GetFileSize(const char* const fileName);
+
+int MyPuts(const char* str, const char separator);
 
 #endif // INPUT_OUTPUT_H

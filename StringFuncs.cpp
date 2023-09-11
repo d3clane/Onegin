@@ -1,69 +1,62 @@
 #include "StringFuncs.h"
 
-const char** BuildPtrArr(const char* text, const char lim, size_t* arrSize)
+const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize)
 {
     assert(text);
     assert(arrSize);
 
-    static const size_t STD_SIZE = 256; 
+    size_t linesCnt = CntChrInStr(text, separator) + 1;
 
-    const char** ptrArr = (const char**) calloc(STD_SIZE, sizeof(*ptrArr));
+    const char** ptrArr = (const char**) calloc(linesCnt, sizeof(*ptrArr));
+
+    if (ptrArr == nullptr)
+        return nullptr;
+    
     size_t posInPtrArr = 0;
 
-    assert(STD_SIZE > 0);
-    assert(0 <= posInPtrArr && posInPtrArr < STD_SIZE);
-
+    assert(0 <= posInPtrArr && posInPtrArr < linesCnt);
     ptrArr[posInPtrArr] = text;
     ++posInPtrArr;
 
-    size_t ptrArrSz = STD_SIZE;
+    size_t ptrArrSz = linesCnt;
     while (*text)
     {
-        if (*text == lim)
+        if (*text == separator)
         {
-            if (posInPtrArr >= ptrArrSz)
-            {
-                //printf("HERE1\n");
-                ptrArrSz <<= 1;
-                //printf("%p\n", ptrArr);
-                //printf("%d\n", ptrArrSz);
+            //printf("HERE %d\n", __LINE__);
+            //printf("%d, %d\n", posInPtrArr, ptrArrSz);
 
-                /*for (size_t i = 0; i < posInPtrArr; ++i)
-                {
-                    printf("%d: pointer: %p ", i, ptrArr[i]);
-                    MyPuts(ptrArr[i], '\n');
-                }*/
-
-                const char** tmp = (const char**) realloc(ptrArr, ptrArrSz * sizeof(*ptrArr));
-                //printf("%p\n", tmp);
-
-                if (tmp == nullptr)
-                {
-                    free(ptrArr);
-                    ptrArr = nullptr;
-                    *arrSize = 0;
-                    return nullptr;
-                }
-
-                ptrArr = tmp;
-
-                /*for (size_t i = 0; i < posInPtrArr; ++i)
-                {
-                    printf("%d: pointer: %p ", i, ptrArr[i]);
-                    MyPuts(ptrArr[i], '\n');
-                }*/
-            }
-            //printf("HERE2\n");
-            assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);
-
+            assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);            
             ptrArr[posInPtrArr] = text + 1;
+            
             //printf("%d: %p\n", posInPtrArr, text + 1);
+            
             ++posInPtrArr;
-
         }
         ++text;
     }
     
     *arrSize = posInPtrArr;
     return ptrArr;
+}
+
+size_t CntChrInStr(const char* str, const char ch)
+{
+    size_t cnt = 0;
+
+    if (ch == '\0')
+        return 1;
+    
+    while (true) 
+    {
+        str = strchr(str, ch);
+
+        if (str == nullptr)
+            break;
+        
+        ++str;
+        ++cnt;
+    }
+
+    return cnt;
 }

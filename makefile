@@ -1,3 +1,4 @@
+CXX = g++-13
 CXXFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations \
 		   -Wc++14-compat -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts \
 		   -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal \
@@ -12,8 +13,37 @@ CXXFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-l
 		   -flto-odr-type-merging -fno-omit-frame-pointer -Wlarger-than=8192 -Wstack-usage=8192 -pie \
 		   -fPIE -Werror=vla
 
-all:
-	g++-13 main.cpp InputOutput.cpp StringFuncs.cpp $(CXXFLAGS)
+PROGRAMDIR = build/bin
+TARGET = onegin
+OBJECTDIR = build
+DOXYFILE = Others/Doxyfile
+
+#filesCpp = Doubles/DoubleFuncs.cpp Error/Errors.cpp InputOutput/InputAndOutput.cpp         \
+#		   Parser/StringEquationFuncs.cpp Solver/Solver.cpp Strings/StringAndCharFuncs.cpp \
+#		   Tester/TestingMode.cpp
+
+HEADERS  = InputOutput.h StringFuncs.h UnitTests.h Colors.h
+
+FILESCPP = InputOutput.cpp StringFuncs.cpp UnitTests.cpp main.cpp
+
+objects = $(FILESCPP:%.cpp=$(OBJECTDIR)/%.o)
+
+.PHONY: all docs clean install
+
+all: $(TARGET)
+
+$(TARGET): $(objects) 
+	$(CXX) $^ -o $(TARGET) $(CXXFLAGS)
+
+$(OBJECTDIR)/%.o : %.cpp $(HEADERS)
+	$(CXX) -c $< -o $@ $(CXXFLAGS) 
+
+docs: 
+	doxygen $(DOXYFILE)
 
 clean:
-	rm -rf *.out
+	rm -rf $(OBJECTDIR)/*.o
+
+install:
+	mkdir $(OBJECTDIR)
+	mkdir $(PROGRAMDIR)

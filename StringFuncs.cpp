@@ -15,10 +15,12 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
         return nullptr;
     
     size_t posInPtrArr = 0;
+
 #pragma GCC diagnostic ignored "-Wtype-limits"
     assert(0 <= posInPtrArr && posInPtrArr < linesCnt);
 #pragma GCC diagnostic warning "-Wtype-limits"
     ptrArr[posInPtrArr] = text;
+    
     ++posInPtrArr;
 
     size_t ptrArrSz = linesCnt;

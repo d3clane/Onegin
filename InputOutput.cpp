@@ -12,6 +12,7 @@ int ReadTextAndParse(TextType* text)
     if (text->text == nullptr)
         return -1;
     
+    UniteSymbols(text->text, '\n');
     text->ptrArr = BuildPtrArr(text->text, '\n', &text->ptrArrSz);
 
     if (text->ptrArr == nullptr)
@@ -31,7 +32,7 @@ char* ReadText(const char* const fileName)
 
     off_t tmpFileSize = GetFileSize(fileName);
 
-    if (tmpFileSize != 0)
+    if (tmpFileSize == -1)
     {
         fprintf(stderr, RedText("Error getting file size %s\n"), fileName);
         return nullptr;
@@ -87,6 +88,8 @@ int PrintText(const char* const* const ptrArr, const size_t sz)
 
 //------------------------------------------------------------------------------------------------
 
+
+//------------------------------------------------------------------------------------------------
 off_t GetFileSize(const char* const fileName)
 {
     assert(fileName);
@@ -116,6 +119,22 @@ int MyPuts(const char* str, const char separator)
     }
 
     return putchar('\n');
+}
+
+//------------------------------------------------------------------------------------------------
+
+void TextTypeDestructor(TextType* text)
+{
+    if (text == nullptr)
+        return;
+
+    free(text->text);
+    text->text = nullptr;
+
+    free(text->ptrArr);
+    text->ptrArr = nullptr;
+
+    text->ptrArrSz = 0;
 }
 
 //------------------------------------------------------------------------------------------------

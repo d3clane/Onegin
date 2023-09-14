@@ -6,6 +6,7 @@
 
 #include "StringFuncs.h"
 #include "InputOutput.h"
+#include "Sorters.h"
 
 void TestAll();
 

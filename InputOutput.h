@@ -1,6 +1,9 @@
 #ifndef INPUT_OUTPUT_H
 #define INPUT_OUTPUT_H
 
+/// @file 
+/// @brief Contains functions to work with input and output for text input
+
 #include <assert.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -14,27 +17,21 @@
 struct TextType
 {
     const char* const fileName; ///< File to read from (file name)
+    
     char *text;                 ///< Dynamic array containing text from file
+
     const char **ptrArr;        
     ///< Dynamic arr with pointers to the beginnings of the strings in text arr
     size_t ptrArrSz;            ///< number of elements in ptrArr
-
-    ~TextType()
-    {
-        free(text);
-        text = nullptr;
-
-        free(ptrArr);
-        ptrArr = nullptr;
-
-        ptrArrSz = 0;
-    }
 };
+
+void TextTypeDestructor(TextType* text);
 
 //------------------------------------------------------------------------------------------------
 
-/// @brief reads text from the file with name text->fileName and parses it to the strings
+/// @brief reads text from the file with name text->fileName and parses it to the strings.
 ///
+/// @details read text, unite all '\n' symbols that goes in a row in one '\n' and parses this on strings
 /// @param [out]text struct that have to contain fileName to read from. fills text->ptrArr and text->text
 /// @return 0 if no errors occurred otherwise not 0
 /// @attention Creates dynamic arrays

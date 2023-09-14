@@ -18,13 +18,9 @@ TARGET = onegin
 OBJECTDIR = build
 DOXYFILE = Others/Doxyfile
 
-#filesCpp = Doubles/DoubleFuncs.cpp Error/Errors.cpp InputOutput/InputAndOutput.cpp         \
-#		   Parser/StringEquationFuncs.cpp Solver/Solver.cpp Strings/StringAndCharFuncs.cpp \
-#		   Tester/TestingMode.cpp
+HEADERS  = InputOutput.h StringFuncs.h UnitTests.h Colors.h Sorters.h
 
-HEADERS  = InputOutput.h StringFuncs.h UnitTests.h Colors.h
-
-FILESCPP = InputOutput.cpp StringFuncs.cpp UnitTests.cpp main.cpp
+FILESCPP = InputOutput.cpp StringFuncs.cpp UnitTests.cpp main.cpp Sorters.cpp
 
 objects = $(FILESCPP:%.cpp=$(OBJECTDIR)/%.o)
 

@@ -20,7 +20,7 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
     assert(0 <= posInPtrArr && posInPtrArr < linesCnt);
 #pragma GCC diagnostic warning "-Wtype-limits"
     ptrArr[posInPtrArr] = text;
-    
+
     ++posInPtrArr;
 
     size_t ptrArrSz = linesCnt;
@@ -71,3 +71,35 @@ size_t CntChrInStr(const char* str, const char ch)
 }
 
 //------------------------------------------------------------------------------------------------
+
+size_t UniteSymbols(char *str, const char ch)
+{
+    assert(str);
+
+    size_t pos = 0;
+    size_t shift = 0;
+
+    while (str[pos])
+    {
+        assert(pos >= shift);
+        assert(pos >= 0);
+        assert(str);
+        str[pos - shift] = str[pos];
+        
+        bool haveDoneCycle = false;
+        while (str[pos] && str[pos] == ch)
+        {
+            ++pos;
+            ++shift;
+            haveDoneCycle = true;
+        }
+
+        if (haveDoneCycle) //in purpose to place one ch symbol 
+            --shift;
+        
+        if (str[pos] && !haveDoneCycle) ++pos;
+    }
+
+    str[pos - shift] = '\0';
+    return pos - shift + 1;
+}

@@ -82,7 +82,9 @@ size_t UniteSymbols(char *str, const char ch)
     while (str[pos])
     {
         assert(pos >= shift);
+#pragma GCC diagnostic ignored "-Wtype-limits"
         assert(pos >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
         assert(str);
         str[pos - shift] = str[pos];
         

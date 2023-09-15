@@ -21,7 +21,8 @@ void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right)
     if (mid + 1 < right) MyQSort(arr, arrSize, mid + 1, right);
 }
 
-void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right)
+void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right,
+             int (*cmp)(const void* str1, const void* str2))
 {
     assert(ptrArr);
 #pragma GCC diagnostic ignored "-Wtype-limits"
@@ -34,12 +35,12 @@ void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size
     //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
     
     size_t mid = left;
-    if (right > left) mid = Partition(ptrArr, ptrArrSz, left, right);
+    if (right > left) mid = Partition(ptrArr, ptrArrSz, left, right, cmp);
 
     //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
-    if (left < mid) MyQSort(ptrArr, ptrArrSz, left, mid);
+    if (left < mid) MyQSort(ptrArr, ptrArrSz, left, mid, cmp);
 
-    if (mid + 1 < right) MyQSort(ptrArr, ptrArrSz, mid + 1, right);
+    if (mid + 1 < right) MyQSort(ptrArr, ptrArrSz, mid + 1, right, cmp);
 }
 
 size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
@@ -138,7 +139,8 @@ size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
     return right;
 }
 
-size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right)
+size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right,
+                 int (*cmp)(const void* str1, const void* str2))
 {
     assert(ptrArr);
 #pragma GCC diagnostic ignored "-Wtype-limits"
@@ -161,7 +163,7 @@ size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, 
         assert(midValue);
         assert(ptrArr[left]);
 
-        while (left < right && StrRCmp(ptrArr[left],  midValue) < 0)
+        while (left < right && cmp(ptrArr[left],  midValue) < 0)
         {
             ++left;
             
@@ -177,7 +179,7 @@ size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, 
         assert(midValue);
         assert(ptrArr[right]);
 
-        while (left < right && StrRCmp(ptrArr[right], midValue) > 0)
+        while (left < right && cmp(ptrArr[right], midValue) > 0)
         {
             assert(right > 0);
             --right;
@@ -209,8 +211,6 @@ size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, 
         const char* tmp = ptrArr[left];
                           ptrArr[left] = ptrArr[right];
                                          ptrArr[right] = tmp;
-    
-        //Swap((void*) ptrArr[left], (void*) ptrArr[right], sizeof(*ptrArr));
 
         assert(right > 0);
         ++left;
@@ -243,6 +243,7 @@ int StrRCmp(const void* str1, const void* str2)
         //printf("XXX\n");
         ++string1;
     }
+
     //printf("HERE2\n");
     while (*string2 != '\n') ++string2;
 
@@ -275,11 +276,11 @@ int StrCmp(const void* str1, const void* str2)
     assert(string1);
     assert(string2);
 
-    printf("%s\n\n\n\n", string1);
-    printf("%s\n\n\n\n", string2);
+    //printf("%s\n\n\n\n", string1);
+    //printf("%s\n\n\n\n", string2);
 
-    while (!isalpha(*string1)) ++string1;
-    while (!isalpha(*string2)) ++string2;
+    while (!isalpha(*string1) && *string1 != '\n') ++string1;
+    while (!isalpha(*string2) && *string2 != '\n') ++string2;
 
     while (isalpha(*string1) && isalpha(*string2) && *string1 == *string2)
     {
@@ -290,13 +291,49 @@ int StrCmp(const void* str1, const void* str2)
     if (!isalpha(*string1)) --string1;
     if (!isalpha(*string2)) --string2;
 
-    printf("HERE\n");
-    MyPuts((const char*) str1, '\n');
-    MyPuts((const char*) str2, '\n');
-    MyPuts(string1, '\n');
-    MyPuts(string2, '\n');
-    printf("ENDHERE\n");
     return *string1 - *string2;
+}
+
+int qsortStrCmp(const void* str1, const void* str2)
+{
+    assert(str1);
+    assert(str2);
+
+    const char* string1 = *((const char* const*) str1);
+    const char* string2 = *((const char* const*) str2);
+
+    assert(string1);
+    assert(string2);
+
+    //printf("%s\n\n\n\n", string1);
+    //printf("%s\n\n\n\n", string2);
+
+    while (!isalpha(*string1) && *string1 != '\n') ++string1;
+    while (!isalpha(*string2) && *string2 != '\n') ++string2;
+
+    while (isalpha(*string1) && isalpha(*string2) && *string1 == *string2)
+    {
+        ++string1;
+        ++string2;
+    }    
+
+    if (!isalpha(*string1)) --string1;
+    if (!isalpha(*string2)) --string2;
+
+    return *string1 - *string2;
+}
+
+#define COPIER(A, B, TYPE)                    \
+{                                             \
+    TYPE temp = 0;                            \
+                                              \
+                                              \
+    memcpy(&temp, a, sizeof(temp));           \
+           memcpy(a, b, sizeof(temp));        \
+              memcpy(b, &temp, sizeof(temp)); \
+                                              \
+    A += sizeof(uint16_t);                    \
+    B += sizeof(uint16_t);                    \
 }
 
 void Swap(void *aVoid, void *bVoid, const size_t size) 
@@ -326,39 +363,14 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
     a = (uint8_t*) (a_ll + sizeInQWords);
     b = (uint8_t*) (b_ll + sizeInQWords);
 
-    if (size & 4) {
-        uint32_t temp = 0;
+    if (size & (uint32_t) 4)
+        COPIER(a, b, uint32_t);
 
-        assert(sizeof(temp) == 4);
+    if (size & (uint16_t) 2)
+        COPIER(a, b, uint16_t);
 
-        memcpy(&temp, a, sizeof(temp));
-               memcpy(a, b, sizeof(temp));
-                  memcpy(b, &temp, sizeof(temp));
-        
-        a += sizeof(uint32_t);
-        b += sizeof(uint32_t);
-    }
-
-    if (size & 2) {
-        uint16_t temp = 0;
-
-        assert(sizeof(temp) == 2);
-
-        memcpy(&temp, a, sizeof(temp));
-               memcpy(a, b, sizeof(temp));
-                  memcpy(b, &temp, sizeof(temp));
-
-        a += sizeof(uint16_t);
-        b += sizeof(uint16_t);
-    }
-
-    if (size & 1) {
-        uint8_t temp = 0;
-        
-        assert(sizeof(temp) == 1);
-
-        memcpy(&temp, a, sizeof(temp));
-               memcpy(a, b, sizeof(temp));
-                  memcpy(b, &temp, sizeof(temp));
-    }
+    if (size & (uint8_t) 1)
+        COPIER(a, b, uint8_t);
 }
+
+#undef COPIER

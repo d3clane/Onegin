@@ -8,6 +8,10 @@
 #include "InputOutput.h"
 #include "Sorters.h"
 
+//#define TESTING
+
 void TestAll();
+
+void TestMyQSort();
 
 #endif // UNIT_TESTS_H

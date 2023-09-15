@@ -10,27 +10,26 @@ int ReadTextAndParse(TextType* text, const char* const inFileName)
     text->inFileName = inFileName;
 
     text->text = ReadText(text->inFileName);
+    
     if (text->text == nullptr)
         return -1;
     
-    const size_t newTextSize = UniteSymbols(text->text, '\n');
+    const size_t newTextSize = UniteChars(text->text, '\n');
     
     text->textSz = newTextSize - 1;
 
     char* const tmp = (char*) realloc(text->text, newTextSize * sizeof(*(text->text)));
 
-    if (tmp != nullptr)
-        text->text = tmp;
-
-    text->ptrArr = BuildPtrArr(text->text, '\n', &text->ptrArrSz);
-
-    //Replace(text->text, '\n', '\0');
-
-    if (text->ptrArr == nullptr)
+    if (tmp != nullptr) 
     {
-        fprintf(stderr, RedText("Error build pointers array\n"));
-        return -1;
+        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
+        text->text = tmp;
     }
+
+    text->linesArr = BuildLinesArr(text->text, '\n', &text->linesCnt);
+
+    if (text->linesArr == nullptr)
+        return -1;
 
     return 0;
 }
@@ -45,7 +44,7 @@ char* ReadText(const char* const fileName)
     
     if (tmpFileSize == -1)
     {
-        fprintf(stderr, RedText("Error getting file size %s\n"), fileName);
+        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
         return nullptr;
     }
 
@@ -55,7 +54,7 @@ char* ReadText(const char* const fileName)
 
     if (text == nullptr)
     {
-        fprintf(stderr, RedText("Error callocing memory for text\n"));
+        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
         return text;
     }
 
@@ -63,7 +62,9 @@ char* ReadText(const char* const fileName)
 
     if (inStream == nullptr)
     {
-        fprintf(stderr, RedText("Error opening file %s\n"), fileName);
+        UpdateError(Errors::FILE_OPENING_ERR);
+
+        free(text);
         return nullptr;
     }
 
@@ -80,10 +81,10 @@ char* ReadText(const char* const fileName)
 
 //------------------------------------------------------------------------------------------------
 
-int PrintText(const char* const* const ptrArr, const size_t sz, const char* const outFileName)
+int PrintLines(const char* const* const linesArr, const size_t linesArrSz, const char* const outFileName)
 {
-    assert(ptrArr);
-    assert(sz > 0);
+    assert(linesArr);
+    assert(linesArrSz > 0);
     assert(outFileName);
 
     FILE* const outStream = fopen(outFileName, "a");
@@ -91,19 +92,15 @@ int PrintText(const char* const* const ptrArr, const size_t sz, const char* cons
     if (outStream == nullptr)
         return 1;
 
-    for (size_t i = 0; i < sz; ++i)
+    for (size_t i = 0; i < linesArrSz; ++i)
     {
-        assert(i < sz);
+        assert(i < linesArrSz);
 
-        int printingError = MyPuts(ptrArr[i], '\n', outStream);
+        int printingError = PutLine(linesArr[i], '\n', outStream);
 
         if (printingError == EOF)
             return printingError;
     }
-
-    fprintf(outStream, "\n\n\n\n\n\n\n\n\n\n\n");
-    fprintf(outStream, "---------------------------------------------------------------------------------");
-    fprintf(outStream, "\n\n\n\n\n\n\n\n\n\n\n");
 
     fclose(outStream);
 
@@ -112,7 +109,7 @@ int PrintText(const char* const* const ptrArr, const size_t sz, const char* cons
 
 //------------------------------------------------------------------------------------------------
 
-size_t PrintStartText(const char* const text, const size_t length, const char* const outFileName)
+size_t PrintText(const char* const text, const size_t length, const char* const outFileName)
 {
     assert(text);
     assert(length > 0);
@@ -124,10 +121,6 @@ size_t PrintStartText(const char* const text, const size_t length, const char* c
         return 0;
     
     size_t nPrintedVals = fwrite(text, sizeof(*text), length, outStream);
-
-    fprintf(outStream, "\n\n\n\n\n\n\n\n\n\n\n");
-    fprintf(outStream, "---------------------------------------------------------------------------------");
-    fprintf(outStream, "\n\n\n\n\n\n\n\n\n\n\n");
 
     fclose(outStream);
 
@@ -150,7 +143,7 @@ off_t GetFileSize(const char* const fileName)
 
 //------------------------------------------------------------------------------------------------
 
-int MyPuts(const char* str, const char separator, FILE* const outStream)
+int PutLine(const char* str, const char separator, FILE* const outStream)
 {
     assert(str);
     assert(outStream);
@@ -170,7 +163,7 @@ int MyPuts(const char* str, const char separator, FILE* const outStream)
 
 //------------------------------------------------------------------------------------------------
 
-void cleanFile(const char* const fileName) 
+void WipeFile(const char* const fileName) 
 {
     assert(fileName);
 
@@ -194,11 +187,11 @@ void TextTypeDestructor(TextType* const text)
     text->text = nullptr;
 
     assert(text);
-    free(text->ptrArr);
-    text->ptrArr = nullptr;
+    free(text->linesArr);
+    text->linesArr = nullptr;
 
     assert(text);
-    text->ptrArrSz = 0;
+    text->linesArr = 0;
 }
 
 //------------------------------------------------------------------------------------------------

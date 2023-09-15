@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "Errors.h"
 #include "InputOutput.h"
 
 //------------------------------------------------------------------------------------------------
@@ -19,7 +20,7 @@
 /// @param [out]arrSize - number of elements in returned pointers array. 
 /// @return dynamic array containg pointers to the strings in text array
 /// @attention Creates dynamic array 
-const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize);
+const char** BuildLinesArr(const char* text, const char separator, size_t* arrSize);
 
 //------------------------------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize
 /// @param [in]str string to count chars in
 /// @param [in]ch char to count in str
 /// @return number of char (ch) in string (str)
-size_t CntChrInStr(const char* str, const char ch);
+size_t CountChars(const char* str, const char ch);
 
 //------------------------------------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ size_t CntChrInStr(const char* str, const char ch);
 /// //after function str = "abc\nde\nf\n"
 /// UniteSymbols will return strlen of new str + 1;
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-size_t UniteSymbols(char *str, const char ch);
+size_t UniteChars(char *str, const char ch);
 
 //------------------------------------------------------------------------------------------------
 

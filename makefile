@@ -18,9 +18,9 @@ TARGET = onegin
 OBJECTDIR = build
 DOXYFILE = Others/Doxyfile
 
-HEADERS  = InputOutput.h StringFuncs.h UnitTests.h Colors.h Sorters.h
+HEADERS  = InputOutput.h StringFuncs.h UnitTests.h Colors.h Sorters.h Errors.h
 
-FILESCPP = InputOutput.cpp StringFuncs.cpp UnitTests.cpp main.cpp Sorters.cpp
+FILESCPP = InputOutput.cpp StringFuncs.cpp UnitTests.cpp main.cpp Sorters.cpp Errors.cpp
 
 objects = $(FILESCPP:%.cpp=$(OBJECTDIR)/%.o)
 

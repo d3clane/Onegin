@@ -2,54 +2,51 @@
 
 //------------------------------------------------------------------------------------------------
 
-const char** BuildPtrArr(const char* text, const char separator, size_t* arrSize)
+const char** BuildLinesArr(const char* text, const char separator, size_t* arrSize)
 {
     assert(text);
     assert(arrSize);
 
-    size_t linesCnt = CntChrInStr(text, separator) + 1;
+    size_t linesCnt = CountChars(text, separator) + 1;
 
-    const char** ptrArr = (const char**) calloc(linesCnt, sizeof(*ptrArr));
+    const char** linesArr = (const char**) calloc(linesCnt, sizeof(*linesArr));
 
-    if (ptrArr == nullptr)
+    if (linesArr == nullptr)
+    {
+        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
         return nullptr;
-    
-    size_t posInPtrArr = 0;
+    }
+
+    size_t posInLinesArr = 0;
 
 #pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(0 <= posInPtrArr && posInPtrArr < linesCnt);
+    assert(0 <= posInLinesArr && posInLinesArr < linesCnt);
 #pragma GCC diagnostic warning "-Wtype-limits"
-    ptrArr[posInPtrArr] = text;
+    linesArr[posInLinesArr] = text;
 
-    ++posInPtrArr;
+    ++posInLinesArr;
 
-    size_t ptrArrSz = linesCnt;
     while (*text)
     {
         if (*text == separator)
         {
-            //printf("HERE %d\n", __LINE__);
-            //printf("%d, %d\n", posInPtrArr, ptrArrSz);
-
 #pragma GCC diagnostic ignored "-Wtype-limits"
-            assert(0 <= posInPtrArr && posInPtrArr < ptrArrSz);     
+            assert(0 <= posInLinesArr && posInLinesArr < linesCnt);     
 #pragma GCC diagnostic warning "-Wtype-limits"       
-            ptrArr[posInPtrArr] = text + 1;
+            linesArr[posInLinesArr] = text + 1;
             
-            //printf("%d: %p\n", posInPtrArr, text + 1);
-            
-            ++posInPtrArr;
+            ++posInLinesArr;
         }
         ++text;
     }
     
-    *arrSize = posInPtrArr;
-    return ptrArr;
+    *arrSize = posInLinesArr;
+    return linesArr;
 }
 
 //------------------------------------------------------------------------------------------------
 
-size_t CntChrInStr(const char* str, const char ch)
+size_t CountChars(const char* str, const char ch)
 {
     size_t cnt = 0;
 
@@ -72,7 +69,7 @@ size_t CntChrInStr(const char* str, const char ch)
 
 //------------------------------------------------------------------------------------------------
 
-size_t UniteSymbols(char *str, const char ch)
+size_t UniteChars(char *str, const char ch)
 {
     assert(str);
 
@@ -103,8 +100,11 @@ size_t UniteSymbols(char *str, const char ch)
     }
 
     str[pos - shift] = '\0';
+
     return pos - shift + 1;
 }
+
+//------------------------------------------------------------------------------------------------
 
 void Replace(char *str, const char find, const char replace)
 {

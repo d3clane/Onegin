@@ -1,50 +1,19 @@
 #include "Sorters.h"
 
-void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right)
-{
-    assert(arr);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-    assert(right < arrSize);
-    assert(arrSize > 0);
-    assert(left <= right);
-    
-    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
-    
-    size_t mid = left;
-    if (right > left) mid = Partition(arr, arrSize, left, right);
+//------------------------------------------------------------------------------------------------
 
-    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
-    if (left < mid) MyQSort(arr, arrSize, left, mid);
-
-    if (mid + 1 < right) MyQSort(arr, arrSize, mid + 1, right);
-}
-
-void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right,
-             int (*cmp)(const void* str1, const void* str2))
-{
-    assert(ptrArr);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-    assert(right < ptrArrSz);
-    assert(ptrArrSz > 0);
-    assert(left <= right);
-    
-    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
-    
-    size_t mid = left;
-    if (right > left) mid = Partition(ptrArr, ptrArrSz, left, right, cmp);
-
-    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
-    
-    if (left < mid) MyQSort(ptrArr, ptrArrSz, left, mid, cmp);
-
-    if (mid + 1 < right) MyQSort(ptrArr, ptrArrSz, mid + 1, right, cmp);
-}
-
-size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
+/// @brief part of the qsort function. Separates array by the middle element and returns separation border
+///
+/// @details returns separation border - the index (X) such as for all indexes z < X
+/// @details arr[z] <= middle element. Middle element = arr[(left + right) / 2] in the 
+/// @details starting array (not sorted);
+///
+/// @param [in]arr array to separate
+/// @param [in]arrSize number of elements in array 
+/// @param [in]left left border of the separating array
+/// @param [in]right right border of the separating array
+/// @return separation border
+static size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
 {
     assert(arr);
 #pragma GCC diagnostic ignored "-Wtype-limits"
@@ -140,20 +109,35 @@ size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
     return right;
 }
 
-size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right,
+//------------------------------------------------------------------------------------------------
+
+/// @brief Part of the qsort function. Separates array by the middle element and returns separation border
+///
+/// @details returns separation border - the index (X) such as for all indexes z < X
+/// @details linesArr[z] <= middle element. Middle element = linesArr[(left + right) / 2] in the 
+/// @details starting array (not sorted);
+///
+/// @param [in]linesArr array to separate
+/// @param [in]linesCnt number of elements in array 
+/// @param [in]left left border of the separating array
+/// @param [in]right right border of the separating array
+/// @param [in]cmp function that compares two strings.
+/// Have to return <0 if str1 is less than str2. 0 if str1 equals str2. Otherwise >0
+/// @return separation border
+static size_t Partition(const char** const linesArr, const size_t linesCnt, size_t left, size_t right,
                  int (*cmp)(const void* str1, const void* str2))
 {
-    assert(ptrArr);
+    assert(linesArr);
 #pragma GCC diagnostic ignored "-Wtype-limits"
     assert(left >= 0);
 #pragma GCC diagnostic warning "-Wtype-limits"
-    assert(right < ptrArrSz);
+    assert(right < linesCnt);
     assert(left < right);
 
     //size_t prevLeft = left;
     //size_t prevRight = right;
 
-    const char* const midValue = ptrArr[(left + right) / 2];
+    const char* const midValue = linesArr[(left + right) / 2];
 
     while (left < right)
     {   
@@ -162,30 +146,30 @@ size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, 
         assert(left >= 0);
 #pragma GCC diagnostic warning "-Wtype-limits"
         assert(midValue);
-        assert(ptrArr[left]);
+        assert(linesArr[left]);
 
-        while (left < ptrArrSz && cmp(ptrArr[left],  midValue) < 0)
+        while (left < linesCnt && cmp(linesArr[left],  midValue) < 0)
         {
             ++left;
             
-            assert(ptrArr[left]);
-            assert(left < ptrArrSz);
+            assert(linesArr[left]);
+            assert(left < linesCnt);
             assert(midValue);
         }
 
         //printf("HERE1 left: %d, right: %d\n", left, right);
 
         //assert(left <= right);
-        assert(right < ptrArrSz);
+        assert(right < linesCnt);
         assert(midValue);
-        assert(ptrArr[right]);
+        assert(linesArr[right]);
 
-        while (right > 0 && cmp(ptrArr[right], midValue) > 0)
+        while (right > 0 && cmp(linesArr[right], midValue) > 0)
         {
             assert(right > 0);
             --right;
 
-            assert(ptrArr[right]);
+            assert(linesArr[right]);
             assert(midValue);
         }
 
@@ -194,27 +178,77 @@ size_t Partition(const char** const ptrArr, const size_t ptrArrSz, size_t left, 
        
         //printf("HERE2 left: %d, right: %d\n", left, right);
 
-        assert(ptrArr);
-        assert(ptrArr[left]);
-        assert(ptrArr[right]);
+        assert(linesArr);
+        assert(linesArr[left]);
+        assert(linesArr[right]);
         assert(left < right);
 #pragma GCC diagnostic ignored "-Wtype-limits"
         assert(left >= 0);
 #pragma GCC diagnostic warning "-Wtype-limits"
-        assert(right < ptrArrSz);
+        assert(right < linesCnt);
         
-        const char* tmp = ptrArr[left];
-                          ptrArr[left] = ptrArr[right];
-                                         ptrArr[right] = tmp;
+        const char* tmp = linesArr[left];
+                          linesArr[left] = linesArr[right];
+                                         linesArr[right] = tmp;
 
         assert(right > 0);
         ++left;
         --right;
-        assert(left < ptrArrSz);
+        assert(left < linesCnt);
     }
 
-    return right;
+    return right;    
 }
+
+//------------------------------------------------------------------------------------------------
+
+void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right)
+{
+    assert(arr);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+    assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+    assert(right < arrSize);
+    assert(arrSize > 0);
+    assert(left <= right);
+    
+    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
+    
+    size_t mid = left;
+    if (right > left) mid = Partition(arr, arrSize, left, right);
+
+    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
+    if (left < mid) MyQSort(arr, arrSize, left, mid);
+
+    if (mid + 1 < right) MyQSort(arr, arrSize, mid + 1, right);
+}
+
+//------------------------------------------------------------------------------------------------
+
+void MyQSort(const char** const linesArr, const size_t linesCnt, size_t left, size_t right,
+             int (*cmp)(const void* str1, const void* str2))
+{
+    assert(linesArr);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+    assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+    assert(right < linesCnt);
+    assert(linesCnt > 0);
+    assert(left <= right);
+    
+    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
+    
+    size_t mid = left;
+    if (right > left) mid = Partition(linesArr, linesCnt, left, right, cmp);
+
+    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
+    
+    if (left < mid) MyQSort(linesArr, linesCnt, left, mid, cmp);
+
+    if (mid + 1 < right) MyQSort(linesArr, linesCnt, mid + 1, right, cmp);
+}
+
+//------------------------------------------------------------------------------------------------
 
 int StrRCmp(const void* str1, const void* str2)
 {
@@ -289,6 +323,8 @@ int StrRCmp(const void* str1, const void* str2)
     return tolower(*string1) - tolower(*string2);
 }
 
+//------------------------------------------------------------------------------------------------
+
 int StrCmp(const void* str1, const void* str2)
 {
     assert(str1);
@@ -356,6 +392,8 @@ int StrCmp(const void* str1, const void* str2)
     assert(isalphaStr2);
     return tolower(*string1) - tolower(*string2);
 }
+
+//------------------------------------------------------------------------------------------------
 
 int qsortStrCmp(const void* str1, const void* str2)
 {
@@ -428,7 +466,9 @@ int qsortStrCmp(const void* str1, const void* str2)
     return tolower(*string1) - tolower(*string2);
 }
 
-#define COPIER(A, B, TYPE)                    \
+//------------------------------------------------------------------------------------------------
+
+#define COPY(A, B, TYPE)                    \
 {                                             \
     TYPE temp = 0;                            \
                                               \
@@ -451,6 +491,10 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
     uint8_t* a = (uint8_t*) aVoid;
     uint8_t* b = (uint8_t*) bVoid;
 
+    /*
+    long a_addr = (long) a;
+    intptr_t b_addr = (intptr_t) b;
+    */
     uint64_t* a_ll = (uint64_t*) a;
     uint64_t* b_ll = (uint64_t*) b;
     uint64_t tmp = 0;
@@ -469,13 +513,15 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
     b = (uint8_t*) (b_ll + sizeInQWords);
 
     if (size & (uint32_t) 4)
-        COPIER(a, b, uint32_t);
+        COPY(a, b, uint32_t);
 
     if (size & (uint16_t) 2)
-        COPIER(a, b, uint16_t);
+        COPY(a, b, uint16_t);
 
     if (size & (uint8_t) 1)
-        COPIER(a, b, uint8_t);
+        COPY(a, b, uint8_t);
 }
 
 #undef COPIER
+
+//------------------------------------------------------------------------------------------------

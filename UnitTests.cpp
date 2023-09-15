@@ -2,13 +2,32 @@
 
 void TestAll()
 {
-    int arr[] = {7, 8, 23, 532, 23, 6, 13, 5, 8, 5, 1, 1};
+    TestMyQSort();
+}
 
-    MyQSort(arr, sizeof(arr) / sizeof(*arr), 0, sizeof(arr) / sizeof(*arr) - 1);
+void TestMyQSort()
+{
+    static const char* fileTest = "Onegin.txt";
+    TextType text1, text2;
 
-    for (size_t i = 0; i < sizeof(arr) / sizeof(*arr); ++i)
+    ReadTextAndParse(&text1, fileTest);
+    ReadTextAndParse(&text2, fileTest);
+
+    MyQSort(text1.linesArr, text1.linesCnt, 0, text1.linesCnt - 1, StrCmp);
+    qsort(text2.linesArr, text2.linesCnt, sizeof(*(text2.linesArr)), qsortStrCmp);
+
+    for (size_t i = 0; i < text1.linesCnt; ++i)
     {
-        printf("%d ", arr[i]);
+        if (strcmp(text1.linesArr[i], text2.linesArr[i]) != 0)
+        {
+            fprintf(stderr, RedText("Error sorts doesn't match on string %zu: \n"
+                                    "MyQSort string: %s\n"
+                                    "qsort   string: %s\n"),
+                            i + 1, text1.linesArr[i], text2.linesArr[i]);
+            break;
+        }
     }
 
+    TextTypeDestructor(&text1);
+    TextTypeDestructor(&text2);
 }

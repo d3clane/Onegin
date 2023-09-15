@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 
 #include "Colors.h"
+#include "Errors.h"
 #include "StringFuncs.h"
 
 //------------------------------------------------------------------------------------------------
@@ -21,8 +22,8 @@ struct TextType
     char *text;                 ///< Dynamic array containing text from file
     size_t textSz;              ///< number of elements in text var
     
-    const char **ptrArr;        ///< Dynamic arr with pointers to the beginnings of the strings in text arr
-    size_t ptrArrSz;            ///< number of elements in ptrArr
+    const char **linesArr;      ///< Dynamic arr with pointers to the beginnings of the strings in text arr
+    size_t linesCnt;            ///< number of elements in ptrArr
 };
 
 void TextTypeDestructor(TextType* text);
@@ -55,7 +56,7 @@ char* ReadText(const char* const fileName);
 /// @param [in]sz number of elements in ptrArr
 /// @param [in]outFileName file name to open to print out
 /// @return 0 if no errors occured otherwise not 0
-int PrintText(const char* const* const ptrArr, const size_t sz, const char* const outFileName);
+int PrintLines(const char* const* const ptrArr, const size_t sz, const char* const outFileName);
 
 //------------------------------------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ int PrintText(const char* const* const ptrArr, const size_t sz, const char* cons
 /// @param [in]length number of element in the text to be printed
 /// @param [in]outFileName file to open to print out
 /// @return number of printed values
-size_t PrintStartText(const char* const text, const size_t length, const char* const outFileName);
+size_t PrintText(const char* const text, const size_t length, const char* const outFileName);
 
 //------------------------------------------------------------------------------------------------
 
@@ -86,12 +87,19 @@ off_t GetFileSize(const char* const fileName);
 /// @param [in]separator separator on which MyPuts will stop printing
 /// @param [in]outStream stream to print out
 /// @return EOF if errors otherwise ASCII code of the last printed symbol
-int MyPuts(const char* str, const char separator, FILE* const outStream);
+int PutLine(const char* str, const char separator, FILE* const outStream);
 
 //------------------------------------------------------------------------------------------------
 
-void cleanFile(const char* const fileName);
+void WipeFile(const char* const fileName);
 
 //------------------------------------------------------------------------------------------------
+
+static inline void PrintTextsSeparators(FILE* const outStream)
+{
+    fprintf(outStream, "\n\n\n\n\n\n\n");
+    fprintf(outStream, "-------------------------------------------------------------------------");
+    fprintf(outStream, "\n\n\n\n\n\n\n");
+}
 
 #endif // INPUT_OUTPUT_H

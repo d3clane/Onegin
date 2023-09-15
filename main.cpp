@@ -8,9 +8,9 @@
 
 int main()
 {
-    setbuf(stdout, nullptr);
-    //TestAll();
-
+#ifdef TESTING
+    TestAll();
+#else
     TextType text = {};
 
     const char* const inFileName = "Onegin.txt";
@@ -22,13 +22,13 @@ int main()
 
     const char* const outputFile    = "Output.txt";
 
-    cleanFile(outputFile);
+    WipeFile(outputFile);
 
-    //MyQSort(text.ptrArr, text.ptrArrSz, 0, text.ptrArrSz - 1, StrCmp);
+    //MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrCmp);
 
-    qsort(text.ptrArr, text.ptrArrSz, sizeof((text.ptrArr)[0]), qsortStrCmp);
+    qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), qsortStrCmp);
 
-    if (PrintText(text.ptrArr, text.ptrArrSz, outputFile) != 0)
+    if (PrintLines(text.linesArr, text.linesCnt, outputFile) != 0)
     {
         fprintf(stderr, RedText("Error printing sorted output\n"));
         return -1;
@@ -36,25 +36,31 @@ int main()
 
     ///--------------------
 
-    //qsort(text.ptrArr, text.ptrArrSz, sizeof(*(text.ptrArr)), StrRCmp);
-    
-    MyQSort(text.ptrArr, text.ptrArrSz, 0, text.ptrArrSz - 1, StrRCmp);
+    //qsort(text.linesArr, text.linesCnt, sizeof(*(text.linesArr)), StrRCmp);
 
-    if (PrintText(text.ptrArr, text.ptrArrSz, outputFile) != 0)
+    MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
+
+    if (PrintLines(text.linesArr, text.linesCnt, outputFile) != 0)
     {
         fprintf(stderr, RedText("Error printing reversed sorter output\n"));
         return -1;
     }
 
+    //PrintTextsSeparators();
+
     ///--------------------
 
-    if (PrintStartText(text.text, text.textSz, outputFile) != text.textSz)
+    if (PrintText(text.text, text.textSz, outputFile) != text.textSz)
     {
         fprintf(stderr, RedText("Error printing not sorted output\n"));
         return -1;
     }
 
+    //PrintTextsSeparators();
+
     ///--------------------
 
     TextTypeDestructor(&text);
+
+#endif
 }

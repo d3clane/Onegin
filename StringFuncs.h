@@ -46,4 +46,13 @@ size_t UniteSymbols(char *str, const char ch);
 
 //------------------------------------------------------------------------------------------------
 
+/// @brief replaces all char 'find' on 'replace' in str
+///
+/// @param [out]str string to replace in
+/// @param [in]find chars to find and replace
+/// @param [in]replace chars to replace on
+void Replace(char *str, const char find, const char replace);
+
+//------------------------------------------------------------------------------------------------
+
 #endif // STRING_FUNCS_H

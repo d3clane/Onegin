@@ -10,18 +10,21 @@ int ReadTextAndParse(TextType* text, const char* const inFileName)
     text->inFileName = inFileName;
 
     text->text = ReadText(text->inFileName);
-
     if (text->text == nullptr)
         return -1;
     
     const size_t newTextSize = UniteSymbols(text->text, '\n');
+    
+    text->textSz = newTextSize - 1;
 
     char* const tmp = (char*) realloc(text->text, newTextSize * sizeof(*(text->text)));
 
     if (tmp != nullptr)
         text->text = tmp;
-    
+
     text->ptrArr = BuildPtrArr(text->text, '\n', &text->ptrArrSz);
+
+    //Replace(text->text, '\n', '\0');
 
     if (text->ptrArr == nullptr)
     {
@@ -66,7 +69,6 @@ char* ReadText(const char* const fileName)
 
     size_t nRead = fread(text, sizeof(char), fileSize, inStream);
     
-    //printf("%d\n", nRead);
     assert(nRead == fileSize - 1);
 
     text[fileSize - 1] = '\0';
@@ -92,6 +94,7 @@ int PrintText(const char* const* const ptrArr, const size_t sz, const char* cons
     for (size_t i = 0; i < sz; ++i)
     {
         assert(i < sz);
+
         int printingError = MyPuts(ptrArr[i], '\n', outStream);
 
         if (printingError == EOF)
@@ -119,7 +122,7 @@ size_t PrintStartText(const char* const text, const size_t length, const char* c
 
     if (outStream == nullptr)
         return 0;
-
+    
     size_t nPrintedVals = fwrite(text, sizeof(*text), length, outStream);
 
     fprintf(outStream, "\n\n\n\n\n\n\n\n\n\n\n");

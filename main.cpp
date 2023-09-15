@@ -15,7 +15,7 @@ int main()
 
     const char* const inFileName = "Onegin.txt";
 
-    if (ReadTextAndParse(&text, inFileName) != 0) //TODO передавать текстовое имя файла и открывать его
+    if (ReadTextAndParse(&text, inFileName) != 0)
         return -1;
 
     ///--------------------
@@ -23,7 +23,7 @@ int main()
     const char* const outputFile    = "Output.txt";
 
     cleanFile(outputFile);
-    
+
     //MyQSort(text.ptrArr, text.ptrArrSz, 0, text.ptrArrSz - 1, StrCmp);
 
     qsort(text.ptrArr, text.ptrArrSz, sizeof((text.ptrArr)[0]), qsortStrCmp);
@@ -36,6 +36,8 @@ int main()
 
     ///--------------------
 
+    //qsort(text.ptrArr, text.ptrArrSz, sizeof(*(text.ptrArr)), StrRCmp);
+    
     MyQSort(text.ptrArr, text.ptrArrSz, 0, text.ptrArrSz - 1, StrRCmp);
 
     if (PrintText(text.ptrArr, text.ptrArrSz, outputFile) != 0)
@@ -46,9 +48,7 @@ int main()
 
     ///--------------------
 
-    const size_t textLength = strlen(text.text);
-
-    if (PrintStartText(text.text, textLength, outputFile) != textLength)
+    if (PrintStartText(text.text, text.textSz, outputFile) != text.textSz)
     {
         fprintf(stderr, RedText("Error printing not sorted output\n"));
         return -1;

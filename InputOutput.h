@@ -16,11 +16,11 @@
 /// @brief Contains info for working with big texts from the file
 struct TextType
 {
-    const char* inFileName; ///< File to read from (file name)
+    const char* inFileName;     ///< File to read from (file name)
     
     char *text;                 ///< Dynamic array containing text from file
-    size_t textLength;          ///< Text length
-
+    size_t textSz;              ///< number of elements in text var
+    
     const char **ptrArr;        ///< Dynamic arr with pointers to the beginnings of the strings in text arr
     size_t ptrArrSz;            ///< number of elements in ptrArr
 };
@@ -59,12 +59,12 @@ int PrintText(const char* const* const ptrArr, const size_t sz, const char* cons
 
 //------------------------------------------------------------------------------------------------
 
-/// @brief 
+/// @brief prints text to outFile
 ///
-/// @param text 
-/// @param length 
-/// @param outFileName 
-/// @return 
+/// @param [in]text text to print
+/// @param [in]length number of element in the text to be printed
+/// @param [in]outFileName file to open to print out
+/// @return number of printed values
 size_t PrintStartText(const char* const text, const size_t length, const char* const outFileName);
 
 //------------------------------------------------------------------------------------------------
@@ -80,7 +80,8 @@ off_t GetFileSize(const char* const fileName);
 /// @brief puts strings to the stdout and stops printing on separator symbol. 
 ///
 /// @details function doesn't puts separator symbol at the end of the string. 
-/// @details It also puts '\n' symbol at the end                         
+/// @details It also puts '\n' symbol at the end   
+///                      
 /// @param [in]str string to print
 /// @param [in]separator separator on which MyPuts will stop printing
 /// @param [in]outStream stream to print out

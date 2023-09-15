@@ -105,3 +105,16 @@ size_t UniteSymbols(char *str, const char ch)
     str[pos - shift] = '\0';
     return pos - shift + 1;
 }
+
+void Replace(char *str, const char find, const char replace)
+{
+    assert(str);
+
+    while (*str)
+    {  
+        assert(str);
+        if (*str == find) *str = replace;
+
+        ++str;
+    }
+}

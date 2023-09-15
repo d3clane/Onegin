@@ -28,10 +28,13 @@ int main()
 
     qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), qsortStrCmp);
 
-    if (PrintLines(text.linesArr, text.linesCnt, outputFile) != 0)
+    PrintLines(text.linesArr, text.linesCnt, outputFile);
+
+    if (IsFatalError())
     {
-        fprintf(stderr, RedText("Error printing sorted output\n"));
-        return -1;
+        fprintf(stderr, RedText("Error printing sorted file\n"));
+        PrintError();
+        return (int) ErrorInfo.error;
     }
 
     ///--------------------
@@ -40,10 +43,11 @@ int main()
 
     MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
 
-    if (PrintLines(text.linesArr, text.linesCnt, outputFile) != 0)
+    if (IsFatalError())
     {
         fprintf(stderr, RedText("Error printing reversed sorter output\n"));
-        return -1;
+        PrintError();
+        return (int) ErrorInfo.error;
     }
 
     //PrintTextsSeparators();

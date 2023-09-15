@@ -1,28 +1,28 @@
 #include "Errors.h"
 
 #ifndef NDEBUG
-    #define PrintError(X) fprintf(stderr, RedText(X "\nError occured in file %s in line %d\n"), \
+    #define PrintErr(X) fprintf(stderr, RedText(X "\nError occured in file %s in line %d\n"), \
                                   ErrorInfo.fileWithError, ErrorInfo.lineWithError)
 #else
-    #define PrintError(X) fprintf(stderr, REDTEXT X);
+    #define PrintErr(X) fprintf(stderr, REDTEXT X);
 #endif
 
 ErrorInfoType ErrorInfo = {.error = Errors::NO_ERR, .fileWithError = "NO_ERRORS.txt", .lineWithError = -1};
 
-void PrintErrors()
+void PrintError()
 {
     switch(ErrorInfo.error)
     {
         case Errors::MEMORY_ALLOCATION_ERR:
-            PrintError("Memory allocation error.");
+            PrintErr("Memory allocation error.");
             break;
 
         case Errors::GETTING_FILE_SIZE_ERR:
-            PrintError("Getting file size with stat() error.");
+            PrintErr("Getting file size with stat() error.");
             break;
 
         case Errors::FILE_OPENING_ERR:
-            PrintError("Can't open the file.");
+            PrintErr("Can't open the file.");
             break;
         
         case Errors::NO_ERR:

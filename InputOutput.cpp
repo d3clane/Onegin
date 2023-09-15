@@ -21,15 +21,14 @@ int ReadTextAndParse(TextType* text, const char* const inFileName)
     char* const tmp = (char*) realloc(text->text, newTextSize * sizeof(*(text->text)));
 
     if (tmp != nullptr) 
-    {
-        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
         text->text = tmp;
-    }
 
     text->linesArr = BuildLinesArr(text->text, '\n', &text->linesCnt);
 
     if (text->linesArr == nullptr)
+    {
         return -1;
+    }
 
     return 0;
 }

@@ -75,7 +75,7 @@ extern ErrorInfoType ErrorInfo;
 
 /// \brief print errors from special struct with errors errorInfo.
 /// \attention errorInfo have to be updated only with UpdateError();
-void PrintErrors();
+void PrintError();
 
 //-----------------------------------------------------------------------------------------------
 

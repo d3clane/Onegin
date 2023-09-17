@@ -13,101 +13,7 @@
 /// @param [in]left left border of the separating array
 /// @param [in]right right border of the separating array
 /// @return separation border
-static size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
-{
-    assert(arr);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-    assert(left <= right);
-    assert(right < arrSize);
-
-    //size_t prevLeft = left;
-    //size_t prevRight = right;
-
-    //printf(REDCONSOLE "%zu: %zu %zu\n" STDCONSOLE, right, left, right - left + 1);
-    //size_t pos = left + rand() % (right - left + 1);
-
-    size_t pos = (left + right) / 2;
-
-    assert(pos <= right);
-    assert(pos >= left);
-
-    //printf(RedText("pos: %zu\n"), pos);
-
-    const int midValue = arr[pos];
-
-    //printf(RedText("MiddleValue: %d\n"), midValue);
-    /*for (size_t i = left; i <= right; ++i)
-        printf("%d ", arr[i]);
-    printf("\n");
-    */
-
-    while (left < right)
-    {
-        assert(left < right);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-        assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-        assert(right < arrSize);
-
-        //printf("left prev: %d  ", left);
-        while (left < right && arr[left] < midValue)
-        {
-            ++left;
-            assert(left < arrSize);
-        }
-
-        //printf("left after: %zu\n", left);
-
-        assert(left <= right);
-        assert(right < arrSize);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-        assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-
-        //printf("right prev: %d  ", right);
-
-        while (left < right && arr[right] > midValue) //почему ваще меняется результат в зависимости от > vs >= 
-        {
-            assert(right > 0);
-            --right;
-        }
-
-        //printf("right after: %zu\n", right);
-
-        if (right <= left)
-            break;
-        
-        assert(right < arrSize);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-        assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-        assert(left < right);
-
-        //printf("leftVal: %d, rightVal: %d\n", arr[left], arr[right]);
-
-        Swap(&arr[left], &arr[right], sizeof(arr[left]));
-
-        assert(right > 0);
-        left++;
-        right--;
-        assert(left < arrSize);
-
-        //printf("leftVal: %d, rightVal: %d, left: %d, right: %d\n", arr[left], arr[right], left, right);
-        /*for (size_t i = prevLeft; i <= prevRight; ++i)
-            printf(ColorText(CYANTEXT, "%d "), arr[i]);
-        printf("\n");
-        */
-    }
-
-    /*for (size_t i = prevLeft; i <= prevRight; ++i)
-        printf("%d ", arr[i]);
-    printf("\n");
-    */
-
-    return right;
-}
+static size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right);
 
 //------------------------------------------------------------------------------------------------
 
@@ -125,80 +31,7 @@ static size_t Partition(int arr[], const size_t arrSize, size_t left, size_t rig
 /// Have to return <0 if str1 is less than str2. 0 if str1 equals str2. Otherwise >0
 /// @return separation border
 static size_t Partition(const char** const linesArr, const size_t linesCnt, size_t left, size_t right,
-                 int (*cmp)(const void* str1, const void* str2))
-{
-    assert(linesArr);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-    assert(right < linesCnt);
-    assert(left < right);
-
-    //size_t prevLeft = left;
-    //size_t prevRight = right;
-
-    const char* const midValue = linesArr[(left + right) / 2];
-
-    while (left < right)
-    {   
-        assert(left < right);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-        assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-        assert(midValue);
-        assert(linesArr[left]);
-
-        while (left < linesCnt && cmp(linesArr[left],  midValue) < 0)
-        {
-            ++left;
-            
-            assert(linesArr[left]);
-            assert(left < linesCnt);
-            assert(midValue);
-        }
-
-        //printf("HERE1 left: %d, right: %d\n", left, right);
-
-        //assert(left <= right);
-        assert(right < linesCnt);
-        assert(midValue);
-        assert(linesArr[right]);
-
-        while (right > 0 && cmp(linesArr[right], midValue) > 0)
-        {
-            assert(right > 0);
-            --right;
-
-            assert(linesArr[right]);
-            assert(midValue);
-        }
-
-        if (right <= left)
-            break;  
-       
-        //printf("HERE2 left: %d, right: %d\n", left, right);
-
-        assert(linesArr);
-        assert(linesArr[left]);
-        assert(linesArr[right]);
-        assert(left < right);
-#pragma GCC diagnostic ignored "-Wtype-limits"
-        assert(left >= 0);
-#pragma GCC diagnostic warning "-Wtype-limits"
-        assert(right < linesCnt);
-        
-        const char* tmp = linesArr[left];
-                          linesArr[left] = linesArr[right];
-                                         linesArr[right] = tmp;
-
-        assert(right > 0);
-        ++left;
-        --right;
-        assert(left < linesCnt);
-    }
-
-    return right;    
-}
+                 int (*cmp)(const void* str1, const void* str2));
 
 //------------------------------------------------------------------------------------------------
 
@@ -250,34 +83,166 @@ void MyQSort(const char** const linesArr, const size_t linesCnt, size_t left, si
 
 //------------------------------------------------------------------------------------------------
 
-int StrRCmp(const void* str1, const void* str2)
+static size_t Partition(const char** const linesArr, const size_t linesCnt, size_t left, size_t right,
+                 int (*cmp)(const void* str1, const void* str2))
 {
-    //printf("START\n");
+    assert(linesArr);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+    assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+    assert(right < linesCnt);
+    assert(left < right);
 
+    const char* const midValue = linesArr[(left + right) / 2];
+
+    while (left < right)
+    {   
+        assert(left < right);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+        assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+        assert(midValue);
+        assert(linesArr[left]);
+
+        while (left < linesCnt && cmp(&linesArr[left],  &midValue) < 0)
+        {
+            ++left;
+            
+            assert(linesArr[left]);
+            assert(left < linesCnt);
+            assert(midValue);
+        }
+
+        assert(right < linesCnt);
+        assert(midValue);
+        assert(linesArr[right]);
+
+        while (right > 0 && cmp(&linesArr[right], &midValue) > 0)
+        {
+            assert(right > 0);
+            --right;
+
+            assert(linesArr[right]);
+            assert(midValue);
+        }
+
+        if (right <= left)
+            break;  
+
+        assert(linesArr);
+        assert(linesArr[left]);
+        assert(linesArr[right]);
+        assert(left < right);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+        assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+        assert(right < linesCnt);
+        
+        const char* tmp = linesArr[left];
+                          linesArr[left] = linesArr[right];
+                                         linesArr[right] = tmp;
+
+        assert(right > 0);
+        ++left;
+        --right;
+        assert(left < linesCnt);
+    }
+
+    return right;    
+}
+
+//------------------------------------------------------------------------------------------------
+
+static size_t Partition(int arr[], const size_t arrSize, size_t left, size_t right)
+{
+    assert(arr);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+    assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+    assert(left <= right);
+    assert(right < arrSize);
+
+    size_t pos = (left + right) / 2;
+
+    assert(pos <= right);
+    assert(pos >= left);
+
+    const int midValue = arr[pos];
+
+    while (left < right)
+    {
+        assert(left < right);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+        assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+        assert(right < arrSize);
+
+        while (left < right && arr[left] < midValue)
+        {
+            ++left;
+            assert(left < arrSize);
+        }
+
+        assert(left <= right);
+        assert(right < arrSize);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+        assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+
+        while (left < right && arr[right] > midValue)
+        {
+            assert(right > 0);
+            --right;
+        }
+
+        if (right <= left)
+            break;
+        
+        assert(right < arrSize);
+#pragma GCC diagnostic ignored "-Wtype-limits"
+        assert(left >= 0);
+#pragma GCC diagnostic warning "-Wtype-limits"
+        assert(left < right);
+
+        Swap(&arr[left], &arr[right], sizeof(arr[left]));
+
+        assert(right > 0);
+        left++;
+        right--;
+        assert(left < arrSize);
+    }
+
+    return right;
+}
+
+//------------------------------------------------------------------------------------------------
+
+int StrRCmp(const void* const str1, const void* const str2)
+{
     assert(str1);
     assert(str2);
 
     static const char STR_END = '\n';
-    const char* string1 = (const char*) str1;
-    const char* string2 = (const char*) str2;
+
+    const char* str1Begin = (*(const char* const*) str1);
+    const char* str2Begin = (*(const char* const*) str2);
+
+    const char* string1 = str1Begin;
+    const char* string2 = str2Begin;
+
 
     assert(string1);
     assert(string2);
 
-    //printf("%s\nHERE1\n%s\n", string1, string2);
-    //printf("%d, %d\n", strlen(string1), strlen(string2));
-
     while (*string1 != STR_END) ++string1;
     while (*string2 != STR_END) ++string2;
 
-    //printf("%s\nHERE1.5\n%s\n", string1, string2);
-
-    while (!isalpha(*string1) && string1 != (const char*) str1) --string1;
-    while (!isalpha(*string2) && string2 != (const char*) str2) --string2;
+    while (!isalpha(*string1) && string1 != str1Begin) --string1;
+    while (!isalpha(*string2) && string2 != str2Begin) --string2;
 
     while (true)
     {
-        if (string1 == (const char*) str1 || string2 == (const char*) str2)
+        if (string1 == str1Begin|| string2 == str2Begin)
             break;
         
         if (!isalpha(*string1))
@@ -297,11 +262,10 @@ int StrRCmp(const void* str1, const void* str2)
 
         --string1;
         --string2;
-        //printf("HERE78\n");
     }
 
-    while (!isalpha(*string1) && string1 != (const char*) str1) --string1;
-    while (!isalpha(*string2) && string2 != (const char*) str2) --string2;
+    while (!isalpha(*string1) && string1 != str1Begin) --string1;
+    while (!isalpha(*string2) && string2 != str2Begin) --string2;
 
     bool isalphaStr1 = isalpha(*string1);
     bool isalphaStr2 = isalpha(*string2);
@@ -317,8 +281,6 @@ int StrRCmp(const void* str1, const void* str2)
 
     assert(isalphaStr1);
     assert(isalphaStr2);
-
-    //printf("END\n");
 
     return tolower(*string1) - tolower(*string2);
 }
@@ -331,87 +293,11 @@ int StrCmp(const void* str1, const void* str2)
     assert(str2);
 
     static const char STR_END = '\n';
-    const char* string1 = (const char*) str1;
-    const char* string2 = (const char*) str2;
-
-    assert(string1);
-    assert(string2);
-
-    //printf("%s\n\n\n\n", string1);
-    //printf("%s\n\n\n\n", string2);
-
-    while (!isalpha(*string1) && *string1 != STR_END) ++string1;
-    while (!isalpha(*string2) && *string2 != STR_END) ++string2;
-
-    while (true)
-    {
-        if (*string1 == STR_END || *string2 == STR_END)
-            break;
-        
-        bool isalphaStr1 = isalpha(*string1);
-
-        if (!isalphaStr1)
-        {
-            ++string1;
-            continue;
-        }
-
-        bool isalphaStr2 = isalpha(*string2);
-
-        if (!isalphaStr2)
-        {
-            ++string2;
-            continue;
-        }
-
-        assert(isalphaStr1);
-        assert(isalphaStr2);
-        if (tolower(*string1) != tolower(*string2))
-            break;
-
-        ++string1;
-        ++string2;
-    }
-
-    while (!isalpha(*string1) && *string1 != STR_END) ++string1;
-    while (!isalpha(*string2) && *string2 != STR_END) ++string2;
-
-    bool isalphaStr1 = isalpha(*string1);
-    bool isalphaStr2 = isalpha(*string2);
-
-    if (!isalphaStr1 && !isalphaStr2)
-        return 0;
-
-    if (!isalphaStr1 && isalphaStr2)
-        return -1;
-    
-    if (isalphaStr1 && !isalphaStr2)
-        return 1;
-
-    assert(isalphaStr1);
-    assert(isalphaStr2);
-    return tolower(*string1) - tolower(*string2);
-}
-
-//------------------------------------------------------------------------------------------------
-
-int qsortStrCmp(const void* str1, const void* str2)
-{
-    assert(str1);
-    assert(str2);
-    assert(str1 != str2);
-
-    static const char STR_END = '\n';
     const char* string1 = *((const char* const*) str1);
     const char* string2 = *((const char* const*) str2);
 
-    //printf("%s\nHERE\n%s\n", string1, string2);
-
     assert(string1);
     assert(string2);
-
-    //printf("%s\n\n\n\n", string1);
-    //printf("%s\n\n\n\n", string2);
 
     while (!isalpha(*string1) && *string1 != STR_END) ++string1;
     while (!isalpha(*string2) && *string2 != STR_END) ++string2;
@@ -522,6 +408,6 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
         COPY(a, b, uint8_t);
 }
 
-#undef COPIER
+#undef COPY
 
 //------------------------------------------------------------------------------------------------

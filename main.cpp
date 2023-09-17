@@ -6,65 +6,68 @@
 #include "StringFuncs.h"
 #include "UnitTests.h"
 
+#define IF_ERR_PRINT(X)              \
+{                                    \
+    if (IsFatalError())              \
+    {                                \
+        fprintf(stderr, RedText(X)); \
+        PrintError();                \
+        return (int)ErrorInfo.error; \
+    }                                \
+} 
+
 int main()
 {
 #ifdef TESTING
     TestAll();
+    IF_ERR_PRINT("Unite tests errors.\n");
 #else
     TextType text = {};
 
     const char* const inFileName = "Onegin.txt";
 
-    if (ReadTextAndParse(&text, inFileName) != 0)
-        return -1;
+    FILE* inStream = TryOpenFile(inFileName, "rb");
+    IF_ERR_PRINT("Can't open file");
+
+    ReadTextAndParse(&text, inStream);
+    IF_ERR_PRINT("");
+    
+    fclose(inStream);
+    ///--------------------
+
+    const char* const outFileName = "Output.txt";
+
+    FILE* outStream = TryOpenFile(outFileName, "wb");
+    IF_ERR_PRINT("Can't open file");
+
+    qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), StrCmp);
+
+    PrintLines(text.linesArr, text.linesCnt, outStream);
+    IF_ERR_PRINT("Error printing sorted file.\n");
+
+    PrintTextsSeparators(outStream);
 
     ///--------------------
 
-    const char* const outputFile    = "Output.txt";
-
-    WipeFile(outputFile);
-
-    //MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrCmp);
-
-    qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), qsortStrCmp);
-
-    PrintLines(text.linesArr, text.linesCnt, outputFile);
-
-    if (IsFatalError())
-    {
-        fprintf(stderr, RedText("Error printing sorted file\n"));
-        PrintError();
-        return (int) ErrorInfo.error;
-    }
-
-    ///--------------------
-
-    //qsort(text.linesArr, text.linesCnt, sizeof(*(text.linesArr)), StrRCmp);
-
+    //qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), StrRCmp);
     MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
+    
+    PrintLines(text.linesArr, text.linesCnt, outStream);
+    IF_ERR_PRINT("Error printing reversed sorter output.\n");
 
-    if (IsFatalError())
-    {
-        fprintf(stderr, RedText("Error printing reversed sorter output\n"));
-        PrintError();
-        return (int) ErrorInfo.error;
-    }
-
-    //PrintTextsSeparators();
+    PrintTextsSeparators(outStream);
 
     ///--------------------
 
-    if (PrintText(text.text, text.textSz, outputFile) != text.textSz)
-    {
-        fprintf(stderr, RedText("Error printing not sorted output\n"));
-        return -1;
-    }
+    PrintText(text.text, text.textSz, outStream);
+    IF_ERR_PRINT("Error printing not sorted output.\n")
 
-    //PrintTextsSeparators();
-
+    fclose(outStream);
     ///--------------------
 
     TextTypeDestructor(&text);
 
 #endif
 }
+
+#undef IF_ERR_PRINT

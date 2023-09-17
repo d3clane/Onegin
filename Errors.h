@@ -25,6 +25,7 @@ enum class Errors {
     
     GETTING_FILE_SIZE_ERR  =  3,
     FILE_OPENING_ERR       =  1,
+    PRINTING_TO_FILE_ERR   =  4,
 
     MEMORY_ALLOCATION_ERR  =  2,   
 };

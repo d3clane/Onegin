@@ -2,50 +2,43 @@
 
 //------------------------------------------------------------------------------------------------
 
-int ReadTextAndParse(TextType* text, const char* const inFileName)
+int ReadTextAndParse(TextType* text, FILE* const inStream)
 {
     assert(text);
-    assert(inFileName);
-
-    text->inFileName = inFileName;
-
-    text->text = ReadText(text->inFileName);
+    assert(inStream);
     
+    text->text = ReadText(inStream);
+
     if (text->text == nullptr)
         return -1;
     
     const size_t newTextSize = UniteChars(text->text, '\n');
-    
-    text->textSz = newTextSize - 1;
 
     char* const tmp = (char*) realloc(text->text, newTextSize * sizeof(*(text->text)));
-
-    if (tmp != nullptr) 
+    
+    if (tmp) 
         text->text = tmp;
 
     text->linesArr = BuildLinesArr(text->text, '\n', &text->linesCnt);
 
     if (text->linesArr == nullptr)
-    {
         return -1;
-    }
 
+    text->textSz = newTextSize - 1;
+    
     return 0;
 }
 
 //------------------------------------------------------------------------------------------------
 
-char* ReadText(const char* const fileName)
+char* ReadText(FILE* const inStream)
 {
-    assert(fileName);
+    assert(inStream);
 
-    off_t tmpFileSize = GetFileSize(fileName);
+    long tmpFileSize = GetFileSize(inStream);
     
     if (tmpFileSize == -1)
-    {
-        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
         return nullptr;
-    }
 
     const size_t fileSize = (size_t) tmpFileSize + 1;
 
@@ -57,39 +50,22 @@ char* ReadText(const char* const fileName)
         return text;
     }
 
-    FILE* inStream = fopen(fileName, "rb");
-
-    if (inStream == nullptr)
-    {
-        UpdateError(Errors::FILE_OPENING_ERR);
-
-        free(text);
-        return nullptr;
-    }
-
     size_t nRead = fread(text, sizeof(char), fileSize, inStream);
-    
+
     assert(nRead == fileSize - 1);
 
     text[fileSize - 1] = '\0';
-
-    fclose(inStream);
 
     return text;
 }
 
 //------------------------------------------------------------------------------------------------
 
-int PrintLines(const char* const* const linesArr, const size_t linesArrSz, const char* const outFileName)
+int PrintLines(const char* const* const linesArr, const size_t linesArrSz, FILE* const outStream)
 {
     assert(linesArr);
     assert(linesArrSz > 0);
-    assert(outFileName);
-
-    FILE* const outStream = fopen(outFileName, "a");
-
-    if (outStream == nullptr)
-        return 1;
+    assert(outStream);
 
     for (size_t i = 0; i < linesArrSz; ++i)
     {
@@ -101,27 +77,21 @@ int PrintLines(const char* const* const linesArr, const size_t linesArrSz, const
             return printingError;
     }
 
-    fclose(outStream);
-
     return 0;
 }
 
 //------------------------------------------------------------------------------------------------
 
-size_t PrintText(const char* const text, const size_t length, const char* const outFileName)
+size_t PrintText(const char* const text, const size_t length, FILE* const outStream)
 {
     assert(text);
     assert(length > 0);
-    assert(outFileName);
-
-    FILE* const outStream = fopen(outFileName, "a");
-
-    if (outStream == nullptr)
-        return 0;
+    assert(outStream);
     
     size_t nPrintedVals = fwrite(text, sizeof(*text), length, outStream);
 
-    fclose(outStream);
+    if (nPrintedVals != length)
+        UpdateError(Errors::PRINTING_TO_FILE_ERR);
 
     return nPrintedVals;
 }
@@ -136,8 +106,31 @@ off_t GetFileSize(const char* const fileName)
 
     int statError = stat(fileName, &fileStats);
 
+    if (statError)
+        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+
     if (statError) return -1;
     return fileStats.st_size;
+}
+
+//------------------------------------------------------------------------------------------------
+
+long GetFileSize(FILE* const fp)
+{
+    assert(fp);
+    
+    if (fseek(fp, 0, SEEK_END) != 0)
+        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+
+    long fileSz = ftell(fp);
+
+    if (fileSz == -1)
+        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+    
+    if (fseek(fp, 0, SEEK_SET) != 0)
+        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+
+    return fileSz;
 }
 
 //------------------------------------------------------------------------------------------------
@@ -191,6 +184,21 @@ void TextTypeDestructor(TextType* const text)
 
     assert(text);
     text->linesArr = 0;
+}
+
+//------------------------------------------------------------------------------------------------
+
+FILE* TryOpenFile(const char* const fileName, const char* const mode)
+{
+    assert(fileName);
+    assert(mode);
+
+    FILE* fp = fopen(fileName, mode);
+
+    if (fp == nullptr)
+        UpdateError(Errors::FILE_OPENING_ERR);
+
+    return fp;
 }
 
 //------------------------------------------------------------------------------------------------

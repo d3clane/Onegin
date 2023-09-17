@@ -18,13 +18,14 @@ void PrintError()
             break;
 
         case Errors::GETTING_FILE_SIZE_ERR:
-            PrintErr("Getting file size with stat() error.");
+            PrintErr("Getting file size error.");
             break;
-
         case Errors::FILE_OPENING_ERR:
             PrintErr("Can't open the file.");
             break;
-        
+        case Errors::PRINTING_TO_FILE_ERR:
+            PrintErr("Can't print to the file.");
+            break;
         case Errors::NO_ERR:
         default:
             break;
@@ -37,9 +38,11 @@ bool IsFatalError()
     {
         case Errors::NO_ERR:
             return false;
+    
         case Errors::FILE_OPENING_ERR:
         case Errors::GETTING_FILE_SIZE_ERR:
         case Errors::MEMORY_ALLOCATION_ERR:
+        case Errors::PRINTING_TO_FILE_ERR:
         default:
             return true;
     }

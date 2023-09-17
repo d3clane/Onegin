@@ -12,8 +12,7 @@
 
 //-----------------------------------------------------------------------------
 
-///         v---- Implementation
-/// @brief realization of qsort for int arrays
+/// @brief Implementation of qsort for int arrays
 ///
 /// @param [in]arr array to sort
 /// @param [in]arrSize number of elements in array 
@@ -24,7 +23,7 @@ void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right);
 
 //-----------------------------------------------------------------------------
 
-/// @brief realization of qsort for pointers on strings arrays
+/// @brief Implementation of qsort for pointers on strings arrays
 ///
 /// @param [in]ptrArr array to sort
 /// @param [in]ptrArrSz number of elements in array 
@@ -41,8 +40,8 @@ void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size
 /// @details While comparing two strings skips non-alpha symbols. 
 /// @details In other aspects acts like strcmp, but compares from the end to begginning.
 ///
-/// @param [in]str1 first string
-/// @param [in]str2 second string
+/// @param [in]str1 POINTER TO THE POINTER to the first string
+/// @param [in]str2 POINTER TO THE POINTER to the second string
 /// @returns <0 if str1 less than str, 0 if they are equal, otherwise >0
 int StrRCmp(const void* str1, const void* str2);
 
@@ -52,20 +51,10 @@ int StrRCmp(const void* str1, const void* str2);
 ///
 /// @details While comparing two strings skips non-alpha symbols. In other aspects acts like std strcmp.
 ///
-/// @param [in]str1 first string
-/// @param [in]str2 second string
+/// @param [in]str1 POINTER TO THE POINTER to the first string
+/// @param [in]str2 POINTER TO THE POINTER to the second string
 /// @returns <0 if str1 less than str, 0 if they are equal, otherwise >0
 int StrCmp(const void* str1, const void* str2);
-
-//-----------------------------------------------------------------------------
-
-/// @brief Compares two string
-/// 
-/// @details this function is used for standard qsort comparison. Acts like StrCmp but in standard qsort
-///
-/// @param [in]str1 first string
-/// @param [in]str2 second string
-int qsortStrCmp(const void* str1, const void* str2);
 
 //-----------------------------------------------------------------------------
 

@@ -21,7 +21,9 @@ int main()
 #ifdef TESTING
     TestAll();
     IF_ERR_PRINT("Unite tests errors.\n");
-#else
+    return 0;
+#endif
+
     TextType text = {};
 
     const char* const inFileName = "Onegin.txt";
@@ -33,6 +35,7 @@ int main()
     IF_ERR_PRINT("");
     
     fclose(inStream);
+    
     ///--------------------
 
     const char* const outFileName = "Output.txt";
@@ -66,8 +69,6 @@ int main()
     ///--------------------
 
     TextTypeDestructor(&text);
-
-#endif
 }
 
 #undef IF_ERR_PRINT

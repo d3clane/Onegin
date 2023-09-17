@@ -6,14 +6,14 @@
 #include "StringFuncs.h"
 #include "UnitTests.h"
 
-#define IF_ERR_PRINT(X)              \
-{                                    \
-    if (IsFatalError())              \
-    {                                \
-        fprintf(stderr, RedText(X)); \
-        PrintError();                \
-        return (int)ErrorInfo.error; \
-    }                                \
+#define IF_ERR_PRINT(X)               \
+{                                     \
+    if (IsFatalError())               \
+    {                                 \
+        fprintf(stderr, RED_TEXT(X)); \
+        PrintError();                 \
+        return (int)ErrorInfo.error;  \
+    }                                 \
 } 
 
 int main()

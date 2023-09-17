@@ -20,7 +20,8 @@
 //-----------------------------------------------------------------------------------------------
 
 /// \brief Errors than may occur during the program working. 
-enum class Errors {
+enum class Errors 
+{
     NO_ERR                 =  0,
     
     GETTING_FILE_SIZE_ERR  =  3,
@@ -38,15 +39,16 @@ const int MAX_MY_FILE_NAME = 64;
 //-----------------------------------------------------------------------------------------------
 
 /// \brief Contains info about errors - File with error, line with error, error code. 
-/// \warning Have to be updated with UpdateError() only
-struct ErrorInfoType {
+/// \warning Have to be updated with UPDATE_ERR() only
+struct ErrorInfoType 
+{
     Errors error; ///< error code
     char fileWithError[MAX_MY_FILE_NAME]; ///< __FILE__ (file name with error)
     int lineWithError; ///< __LINE__ (line with error)
 };
 
 /// \brief global errorInfo constant with error info
-/// \warning this variable have to be changes only with UpdateError()
+/// \warning this variable have to be changes only with UPDATE_ERR()
 extern ErrorInfoType ErrorInfo;
 
 //-----------------------------------------------------------------------------------------------
@@ -57,25 +59,26 @@ extern ErrorInfoType ErrorInfo;
 /// \details copyFileName copy of __FILE__ define at the moment macros is called 
 /// \details copyLineNumber __LINE__ define at the moment macros is valled
 /// \param [in]ERROR Errors enum with error occurred in program
-#define UpdateError(ERROR)                                            \
+#define UPDATE_ERR(ERROR)                                             \
+do                                                                    \
 {                                                                     \
         strncpy(ErrorInfo.fileWithError, __FILE__, MAX_MY_FILE_NAME); \
         ErrorInfo.lineWithError = __LINE__;                           \
         ErrorInfo.error = ERROR;                                      \
-}
+} while(0)
     
 #else
 
 /// \brief updates only error code without debug info
 /// \param [in] ERROR Errors enum with error occurred in program
-#define UpdateError(ERROR) ErrorInfo.error = ERROR
+#define UPDATE_ERR(ERROR) ErrorInfo.error = ERROR
 
 #endif
 
 //----------------------------------------------------------------------------------------------
 
 /// \brief print errors from special struct with errors errorInfo.
-/// \attention errorInfo have to be updated only with UpdateError();
+/// \attention errorInfo have to be updated only with UPDATE_ERR();
 void PrintError();
 
 //-----------------------------------------------------------------------------------------------

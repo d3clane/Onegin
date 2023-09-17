@@ -46,7 +46,7 @@ char* ReadText(FILE* const inStream)
 
     if (text == nullptr)
     {
-        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
+        UPDATE_ERR(Errors::MEMORY_ALLOCATION_ERR);
         return text;
     }
 
@@ -91,7 +91,7 @@ size_t PrintText(const char* const text, const size_t length, FILE* const outStr
     size_t nPrintedVals = fwrite(text, sizeof(*text), length, outStream);
 
     if (nPrintedVals != length)
-        UpdateError(Errors::PRINTING_TO_FILE_ERR);
+        UPDATE_ERR(Errors::PRINTING_TO_FILE_ERR);
 
     return nPrintedVals;
 }
@@ -107,7 +107,7 @@ off_t GetFileSize(const char* const fileName)
     int statError = stat(fileName, &fileStats);
 
     if (statError)
-        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
 
     if (statError) return -1;
     return fileStats.st_size;
@@ -120,15 +120,15 @@ long GetFileSize(FILE* const fp)
     assert(fp);
     
     if (fseek(fp, 0, SEEK_END) != 0)
-        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
 
     long fileSz = ftell(fp);
 
     if (fileSz == -1)
-        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
     
     if (fseek(fp, 0, SEEK_SET) != 0)
-        UpdateError(Errors::GETTING_FILE_SIZE_ERR);
+        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
 
     return fileSz;
 }
@@ -196,7 +196,7 @@ FILE* TryOpenFile(const char* const fileName, const char* const mode)
     FILE* fp = fopen(fileName, mode);
 
     if (fp == nullptr)
-        UpdateError(Errors::FILE_OPENING_ERR);
+        UPDATE_ERR(Errors::FILE_OPENING_ERR);
 
     return fp;
 }

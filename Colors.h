@@ -22,18 +22,17 @@
 #define WHITECONSOLE    "\x1b[47;1m"
 #define STDCONSOLE      "\x1b[40;0m"
 
-#define RedText(X)     REDTEXT X STDTEXT
-#define GreenText(X) GREENTEXT X STDTEXT
-#define ColorText(COLOR, X) COLOR X STDTEXT
+#define RED_TEXT(X)     REDTEXT X STDTEXT
+#define GREEN_TEXT(X) GREENTEXT X STDTEXT
+#define COLOR_TEXT(COLOR, X) COLOR X STDTEXT
 
-#define SetRedConsole printf(REDCONSOLE)
-#define SetGreenConsole printf(GREENCONSOLE)
-#define SetColorConsole(COLOR) printf(COLOR)
-#define SetStandardConsole printf(STDCONSOLE)
+#define SET_RED_CONSOLE printf(REDCONSOLE)
+#define SET_GREEN_CONSOLE printf(GREENCONSOLE)
+#define SET_COLOR_CONSOLE(COLOR) printf(COLOR)
+#define SET_STD_CONSOLE printf(STDCONSOLE)
 
-#define PrintRedText(STRING_FORMATER, ...)   printf(REDTEXT STRING_FORMATER STDTEXT, __VA_ARGS__)
-#define PrintGreenText(STRING_FORMATER, ...) printf(GREENTEXT STRING_FORMATER STDTEXT, __VA_ARGS__)
-#define PrintColorText(COLOR, STRING_FORMATER, ...) printf(COLOR STRING_FORMATER STDTEXT, __VA_ARGS__)
-#define PrintOnlyColorText(COLOR, STRING) printf(COLOR STRING STDTEXT);
+#define PRINT_RED_TEXT(STRING_FORMATER, ...)   printf(REDTEXT STRING_FORMATER STDTEXT, __VA_ARGS__)
+#define PRINT_GREEN_TEXT(STRING_FORMATER, ...) printf(GREENTEXT STRING_FORMATER STDTEXT, __VA_ARGS__)
+#define PRINT_COLOR_TEXT(COLOR, STRING_FORMATER, ...) printf(COLOR STRING_FORMATER STDTEXT, __VA_ARGS__)
 
 #endif // COLORS_H

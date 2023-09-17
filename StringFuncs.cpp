@@ -13,7 +13,7 @@ const char** BuildLinesArr(const char* text, const char separator, size_t* arrSi
 
     if (linesArr == nullptr)
     {
-        UpdateError(Errors::MEMORY_ALLOCATION_ERR);
+        UPDATE_ERR(Errors::MEMORY_ALLOCATION_ERR);
         return nullptr;
     }
 

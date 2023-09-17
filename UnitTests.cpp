@@ -29,7 +29,7 @@ void TestMyQSort()
     {
         if (strcmp(text1.linesArr[i], text2.linesArr[i]) != 0)
         {
-            fprintf(stderr, RedText("Error sorts doesn't match on string %zu: \n"), i + 1);
+            fprintf(stderr, RED_TEXT("Error sorts doesn't match on string %zu: \n"), i + 1);
 
             PutLine(text1.linesArr[i], '\n', stderr);
             PutLine(text2.linesArr[i], '\n', stderr);

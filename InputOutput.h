@@ -14,6 +14,10 @@
 
 //------------------------------------------------------------------------------------------------
 
+void ReadTextFromFileAndParse(TextType* text, const char* const fileName);
+
+//------------------------------------------------------------------------------------------------
+
 /// @brief reads text from the inStream and parses it to the strings.
 ///
 /// @details read text, unite all '\n' symbols that goes in a row in one '\n' and parses this on strings

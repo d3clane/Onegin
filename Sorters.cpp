@@ -138,10 +138,7 @@ static size_t Partition(LineType* lines, const size_t linesCnt, size_t left, siz
 #pragma GCC diagnostic warning "-Wtype-limits"
         assert(right < linesCnt);
         
-        // TODO: пихнуть своп
-        LineType tmp =  lines[left];
-                    lines[left] = lines[right];
-                                  lines[right] = tmp;
+        Swap(&lines[left], &lines[right], sizeof(lines[left]));
 
         assert(right > 0);
         ++left;
@@ -354,6 +351,7 @@ int StrCmp(const void* str1, const void* str2)
 
 //------------------------------------------------------------------------------------------------
 
+// ub но оставлю потому что жалко убирать(
 #define COPY(A, B, TYPE)                      \
 {                                             \
     TYPE temp = 0;                            \

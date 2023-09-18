@@ -2,6 +2,23 @@
 
 //------------------------------------------------------------------------------------------------
 
+void ReadTextFromFileAndParse(TextType* text, const char* const fileName)
+{
+    FILE* inStream = TryOpenFile(fileName, "rb");
+
+    if (inStream == nullptr)
+    {
+        UPDATE_ERR(Errors::FILE_OPENING_ERR);
+        return;
+    }
+
+    ReadTextAndParse(text, inStream);
+
+    fclose(inStream);
+}
+
+//------------------------------------------------------------------------------------------------
+
 int ReadTextAndParse(TextType* text, FILE* const inStream)
 {
     assert(text);

@@ -1,6 +1,6 @@
 #include "UnitTests.h"
 
-/*void TestAll()
+void TestAll()
 {
     TestMyQSort();
 }
@@ -22,17 +22,17 @@ void TestMyQSort()
     ReadTextAndParse(&text2, inStream2);
     if (IsFatalError()) return;
 
-    MyQSort(text1.linesArr, text1.linesCnt, 0, text1.linesCnt - 1, StrCmp);
-    qsort(text2.linesArr, text2.linesCnt, sizeof(*(text2.linesArr)), StrCmp);
+    MyQSort(text1.lines, text1.linesCnt, 0, text1.linesCnt - 1, StrCmp);
+    qsort(text2.lines, text2.linesCnt, sizeof(*(text2.lines)), StrCmp);
 
     for (size_t i = 0; i < text1.linesCnt; ++i)
     {
-        if (strcmp(text1.linesArr[i], text2.linesArr[i]) != 0)
+        if (strcmp(text1.lines[i].line, text2.lines[i].line) != 0)
         {
             fprintf(stderr, RED_TEXT("Error sorts doesn't match on string %zu: \n"), i + 1);
 
-            PutLine(text1.linesArr[i], '\n', stderr);
-            PutLine(text2.linesArr[i], '\n', stderr);
+            PutLine(text1.lines[i], stderr);
+            PutLine(text2.lines[i], stderr);
 
             break;
         }
@@ -40,4 +40,4 @@ void TestMyQSort()
 
     TextTypeDestructor(&text1);
     TextTypeDestructor(&text2);
-}*/
+}

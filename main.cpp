@@ -24,24 +24,27 @@ int main()
     return 0;
 #endif
 
+    // reading input
+
     TextType text = {};
 
     const char* const inFileName = "Onegin.txt";
 
-    FILE* inStream = TryOpenFile(inFileName, "rb");
-    IF_ERR_PRINT("Can't open file");
+    ReadTextFromFileAndParse(&text, inFileName);
+    IF_ERR_PRINT("Reading text from file and parsing error.\n");
+    
+    //--------------------
 
-    ReadTextAndParse(&text, inStream);
-    IF_ERR_PRINT("");
-    
-    fclose(inStream);
-    
-    ///--------------------
+    // open out file
 
     const char* const outFileName = "Output.txt";
 
     FILE* outStream = TryOpenFile(outFileName, "wb");
-    IF_ERR_PRINT("Can't open file");
+    IF_ERR_PRINT("Can't open file.\n");
+
+    //--------------------
+
+    // print sorted
 
     qsort(text.lines, text.linesCnt, sizeof((text.lines)[0]), StrCmp);
 
@@ -50,9 +53,10 @@ int main()
 
     PrintTextsSeparators(outStream);
 
-    ///--------------------
+    //--------------------
 
-    //qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), StrRCmp);
+    // print reversed sorted
+
     MyQSort(text.lines, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
     
     PrintLines(text.lines, text.linesCnt, outStream);
@@ -60,12 +64,15 @@ int main()
 
     PrintTextsSeparators(outStream);
 
-    ///--------------------
+    //--------------------
+
+    // print not changed text
 
     PrintText(text.text, text.textSz, outStream);
     IF_ERR_PRINT("Error printing not sorted output.\n")
 
     fclose(outStream);
+
     ///--------------------
 
     TextTypeDestructor(&text);

@@ -226,14 +226,6 @@ int StrRCmp(const void* const str1, const void* const str2)
     const LineType str1Begin = *((const LineType*) str1);
     const LineType str2Begin = *((const LineType*) str2);
 
-    /*printf(RED_TEXT("COMPARING string1:"));
-    PutLine(str1Begin, stdout);
-    printf(GREEN_TEXT("Length string1: %zu\n"), str1Begin.lineLength);
-
-    printf(RED_TEXT("AND STRING2: "));
-    PutLine(str2Begin, stdout);
-    printf(GREEN_TEXT("Length string2: %zu\n"), str2Begin.lineLength);*/
-
     LineType string1 = str1Begin;
     LineType string2 = str2Begin;
 
@@ -243,7 +235,6 @@ int StrRCmp(const void* const str1, const void* const str2)
     string1.line = string1.line + string1.lineLength - 1;
     string2.line = string2.line + string2.lineLength - 1;
 
-    // TODO: function move on the next isalpha symbol
     while (!isalpha(*string1.line) && string1.line != str1Begin.line) --string1.line;
     while (!isalpha(*string2.line) && string2.line != str2Begin.line) --string2.line;
 
@@ -299,51 +290,53 @@ int StrCmp(const void* str1, const void* str2)
     assert(str1);
     assert(str2);
 
-    static const char STR_END = '\n';
-    const char* string1 = *((const char* const*) str1);
-    const char* string2 = *((const char* const*) str2);
+    const LineType str1Begin = *((const LineType*) str1);
+    const LineType str2Begin = *((const LineType*) str2);
 
-    assert(string1);
-    assert(string2);
+    LineType string1 = str1Begin;
+    LineType string2 = str2Begin;
 
-    while (!isalpha(*string1) && *string1 != STR_END) ++string1;
-    while (!isalpha(*string2) && *string2 != STR_END) ++string2;
+    assert(string1.line);
+    assert(string2.line);
+
+    while (!isalpha(*string1.line) && *string1.line != string1.lineEnding) ++string1.line;
+    while (!isalpha(*string2.line) && *string2.line != string2.lineEnding) ++string2.line;
 
     while (true)
     {
-        if (*string1 == STR_END || *string2 == STR_END)
+        if (*string1.line == string1.lineEnding || *string2.line == string2.lineEnding)
             break;
         
-        bool isalphaStr1 = isalpha(*string1);
+        bool isalphaStr1 = isalpha(*string1.line);
 
         if (!isalphaStr1)
         {
-            ++string1;
+            ++string1.line;
             continue;
         }
 
-        bool isalphaStr2 = isalpha(*string2);
+        bool isalphaStr2 = isalpha(*string2.line);
 
         if (!isalphaStr2)
         {
-            ++string2;
+            ++string2.line;
             continue;
         }
 
         assert(isalphaStr1);
         assert(isalphaStr2);
-        if (tolower(*string1) != tolower(*string2))
+        if (tolower(*string1.line) != tolower(*string2.line))
             break;
 
-        ++string1;
-        ++string2;
+        ++string1.line;
+        ++string2.line;
     }
 
-    while (!isalpha(*string1) && *string1 != STR_END) ++string1;
-    while (!isalpha(*string2) && *string2 != STR_END) ++string2;
+    while (!isalpha(*string1.line) && *string1.line != string1.lineEnding) ++string1.line;
+    while (!isalpha(*string2.line) && *string2.line != string2.lineEnding) ++string2.line;
 
-    bool isalphaStr1 = isalpha(*string1);
-    bool isalphaStr2 = isalpha(*string2);
+    bool isalphaStr1 = isalpha(*string1.line);
+    bool isalphaStr2 = isalpha(*string2.line);
 
     if (!isalphaStr1 && !isalphaStr2)
         return 0;
@@ -356,7 +349,7 @@ int StrCmp(const void* str1, const void* str2)
 
     assert(isalphaStr1);
     assert(isalphaStr2);
-    return tolower(*string1) - tolower(*string2);
+    return tolower(*string1.line) - tolower(*string2.line);
 }
 
 //------------------------------------------------------------------------------------------------

@@ -354,7 +354,7 @@ int StrCmp(const void* str1, const void* str2)
 
 //------------------------------------------------------------------------------------------------
 
-#define COPY(A, B, TYPE)                    \
+#define COPY(A, B, TYPE)                      \
 {                                             \
     TYPE temp = 0;                            \
                                               \

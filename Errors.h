@@ -62,9 +62,9 @@ extern ErrorInfoType ErrorInfo;
 #define UPDATE_ERR(ERROR)                                             \
 do                                                                    \
 {                                                                     \
-        strncpy(ErrorInfo.fileWithError, __FILE__, MAX_MY_FILE_NAME); \
-        ErrorInfo.lineWithError = __LINE__;                           \
-        ErrorInfo.error = ERROR;                                      \
+    strncpy(ErrorInfo.fileWithError, __FILE__, MAX_MY_FILE_NAME);     \
+    ErrorInfo.lineWithError = __LINE__;                               \
+    ErrorInfo.error = ERROR;                                          \
 } while(0)
     
 #else

@@ -24,6 +24,10 @@ struct TextType
     size_t linesCnt;            ///< number of elements in ptrArr
 };
 
+/// @brief Destructs text
+///
+/// @details Free all dynamic arrays
+/// @param [out]text structure to destruct
 void TextTypeDestructor(TextType* text);
 
 //------------------------------------------------------------------------------------------------

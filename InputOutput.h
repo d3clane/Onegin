@@ -18,7 +18,8 @@
 ///
 /// @param [out]text struct to fill
 /// @param [in]fileName file to open
-void ReadTextFromFileAndParse(TextType* text, const char* const fileName);
+/// @return ReadTextAndParse result
+int ReadTextFromFileAndParse(TextType* text, const char* const fileName);
 
 //------------------------------------------------------------------------------------------------
 

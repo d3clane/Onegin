@@ -25,12 +25,12 @@ void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right);
 
 /// @brief Implementation of qsort for pointers on strings arrays
 ///
-/// @param [in]ptrArr array to sort
-/// @param [in]ptrArrSz number of elements in array 
+/// @param [in]lines array to sort
+/// @param [in]linesCnt number of elements in array 
 /// @param [in]left left border of the sorting array (usually 0)
 /// @param [in]right right border of the sorting array (usually arrSize - 1)
 /// @attention ptrArr[right] is included in sorting, so right have to be less than arrSize
-void MyQSort(const char** const ptrArr, const size_t ptrArrSz, size_t left, size_t right,
+void MyQSort(LineType* lines, const size_t linesCnt, size_t left, size_t right,
              int (*cmp)(const void* str1, const void* str2));
 
 //-----------------------------------------------------------------------------

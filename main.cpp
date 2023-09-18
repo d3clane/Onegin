@@ -43,9 +43,9 @@ int main()
     FILE* outStream = TryOpenFile(outFileName, "wb");
     IF_ERR_PRINT("Can't open file");
 
-    qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), StrCmp);
+    qsort(text.lines, text.linesCnt, sizeof((text.lines)[0]), StrCmp);
 
-    PrintLines(text.linesArr, text.linesCnt, outStream);
+    PrintLines(text.lines, text.linesCnt, outStream);
     IF_ERR_PRINT("Error printing sorted file.\n");
 
     PrintTextsSeparators(outStream);
@@ -53,9 +53,9 @@ int main()
     ///--------------------
 
     //qsort(text.linesArr, text.linesCnt, sizeof((text.linesArr)[0]), StrRCmp);
-    MyQSort(text.linesArr, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
+    MyQSort(text.lines, text.linesCnt, 0, text.linesCnt - 1, StrRCmp);
     
-    PrintLines(text.linesArr, text.linesCnt, outStream);
+    PrintLines(text.lines, text.linesCnt, outStream);
     IF_ERR_PRINT("Error printing reversed sorter output.\n");
 
     PrintTextsSeparators(outStream);

@@ -2,46 +2,55 @@
 
 //------------------------------------------------------------------------------------------------
 
-const char** BuildLinesArr(const char* text, const char separator, size_t* arrSize)
+LineType* BuildLinesArr(const char* text, const char separator, size_t* arrSize)
 {
     assert(text);
     assert(arrSize);
 
     size_t linesCnt = CountChars(text, separator) + 1;
 
-    const char** linesArr = (const char**) calloc(linesCnt, sizeof(*linesArr));
+    LineType* lines = (LineType*) calloc(linesCnt, sizeof(*lines));
 
-    if (linesArr == nullptr)
+    if (lines == nullptr)
     {
         UPDATE_ERR(Errors::MEMORY_ALLOCATION_ERR);
         return nullptr;
     }
 
-    size_t posInLinesArr = 0;
+    size_t lineIndex = 0;
 
 #pragma GCC diagnostic ignored "-Wtype-limits"
-    assert(0 <= posInLinesArr && posInLinesArr < linesCnt);
+    assert(0 <= lineIndex && lineIndex < linesCnt);
 #pragma GCC diagnostic warning "-Wtype-limits"
-    linesArr[posInLinesArr] = text;
 
-    ++posInLinesArr;
+    lines[lineIndex].line       = text;
+    lines[lineIndex].lineEnding = '\n';
 
-    while (*text)
+    ++lineIndex;
+
+    const char* textIterator = text;
+    while (*textIterator)
     {
-        if (*text == separator)
+        if (*textIterator == separator)
         {
 #pragma GCC diagnostic ignored "-Wtype-limits"
-            assert(0 <= posInLinesArr && posInLinesArr < linesCnt);     
-#pragma GCC diagnostic warning "-Wtype-limits"       
-            linesArr[posInLinesArr] = text + 1;
-            
-            ++posInLinesArr;
+            assert(0 <= lineIndex && lineIndex < linesCnt);     
+#pragma GCC diagnostic warning "-Wtype-limits"   
+
+            assert(lineIndex > 0);
+            lines[lineIndex].lineEnding     = '\n';
+            lines[lineIndex].line           = textIterator + 1;
+            lines[lineIndex - 1].lineLength = lines[lineIndex].line - lines[lineIndex - 1].line;
+
+            ++lineIndex;
         }
-        ++text;
+        ++textIterator;
     }
     
-    *arrSize = posInLinesArr;
-    return linesArr;
+    *arrSize = lineIndex;
+    lines[lineIndex].lineLength  = textIterator - lines[lineIndex].line;
+
+    return lines;
 }
 
 //------------------------------------------------------------------------------------------------

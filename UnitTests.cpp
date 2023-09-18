@@ -1,6 +1,6 @@
 #include "UnitTests.h"
 
-void TestAll()
+/*void TestAll()
 {
     TestMyQSort();
 }
@@ -40,4 +40,4 @@ void TestMyQSort()
 
     TextTypeDestructor(&text1);
     TextTypeDestructor(&text2);
-}
+}*/

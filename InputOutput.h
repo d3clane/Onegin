@@ -14,13 +14,21 @@
 
 //------------------------------------------------------------------------------------------------
 
+/// @brief Contains info about line (her ending and length)
+struct LineType
+{
+    const char* line;       ///< string line
+    char lineEnding;        ///< symbol on which line is ending
+    size_t lineLength;      ///< line length
+};
+
 /// @brief Contains info for working with big texts from the file
 struct TextType
 {    
     char *text;                 ///< Dynamic array containing text from file
     size_t textSz;              ///< number of elements in text var
     
-    const char **linesArr;      ///< Dynamic arr with pointers to the beginnings of the strings in text arr
+    LineType* lines;                /// Dynamic arr with pointers to the lines
     size_t linesCnt;            ///< number of elements in ptrArr
 };
 
@@ -43,9 +51,9 @@ int ReadTextAndParse(TextType* text, FILE* const inStream);
 
 //------------------------------------------------------------------------------------------------
 
-/// @brief reads text from the file with fileName
+/// @brief reads text from the inStream
 ///
-/// @param [in]fileName fileName to open
+/// @param [in]inStream stream to read from
 /// @return pointer to the dynamic array containing text
 /// @attention Creates dynamic array
 char* ReadText(FILE* const inStream);
@@ -54,11 +62,11 @@ char* ReadText(FILE* const inStream);
 
 /// @brief prints text
 ///
-/// @param [in]ptrArr array containing pointers to the strings beginnings
-/// @param [in]sz number of elements in ptrArr
-/// @param [in]outFileName file name to open to print out
+/// @param [in]lines array containing pointers to the lines.
+/// @param [in]linesCnt number of elements in ptrArr
+/// @param [in]outStream file pointer to print output
 /// @return 0 if no errors occured otherwise not 0
-int PrintLines(const char* const* const ptrArr, const size_t sz, FILE* const outStream);
+int PrintLines(LineType* lines, const size_t linesCnt, FILE* const outStream);
 
 //------------------------------------------------------------------------------------------------
 
@@ -93,11 +101,10 @@ long GetFileSize(FILE* const fp);
 /// @details function doesn't puts separator symbol at the end of the string. 
 /// @details It also puts '\n' symbol at the end   
 ///                      
-/// @param [in]str string to print
-/// @param [in]separator separator on which MyPuts will stop printing
+/// @param [in]line Line to print out
 /// @param [in]outStream stream to print out
 /// @return EOF if errors otherwise ASCII code of the last printed symbol
-int PutLine(const char* str, const char separator, FILE* const outStream);
+int PutLine(LineType line, FILE* const outStream);
 
 //------------------------------------------------------------------------------------------------
 

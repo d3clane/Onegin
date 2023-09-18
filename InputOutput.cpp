@@ -18,10 +18,10 @@ int ReadTextAndParse(TextType* text, FILE* const inStream)
     
     if (tmp) 
         text->text = tmp;
+        
+    //text->lines = BuildLinesArr(text->text, '\n', &(text->linesCnt));
 
-    text->linesArr = BuildLinesArr(text->text, '\n', &text->linesCnt);
-
-    if (text->linesArr == nullptr)
+    if (text->lines == nullptr)
         return -1;
 
     text->textSz = newTextSize - 1;
@@ -61,17 +61,17 @@ char* ReadText(FILE* const inStream)
 
 //------------------------------------------------------------------------------------------------
 
-int PrintLines(const char* const* const linesArr, const size_t linesArrSz, FILE* const outStream)
+int PrintLines(LineType* lines, const size_t linesCnt, FILE* const outStream)
 {
-    assert(linesArr);
-    assert(linesArrSz > 0);
+    assert(lines);
+    assert(linesCnt > 0);
     assert(outStream);
 
-    for (size_t i = 0; i < linesArrSz; ++i)
+    for (size_t i = 0; i < linesCnt; ++i)
     {
-        assert(i < linesArrSz);
+        assert(i < linesCnt);
 
-        int printingError = PutLine(linesArr[i], '\n', outStream);
+        int printingError = PutLine(lines[i], outStream);
 
         if (printingError == EOF)
             return printingError;
@@ -98,7 +98,7 @@ size_t PrintText(const char* const text, const size_t length, FILE* const outStr
 
 //------------------------------------------------------------------------------------------------
 
-off_t GetFileSize(const char* const fileName)
+off_t GetFileSize(const char *const fileName)
 {
     assert(fileName);
 
@@ -135,19 +135,21 @@ long GetFileSize(FILE* const fp)
 
 //------------------------------------------------------------------------------------------------
 
-int PutLine(const char* str, const char separator, FILE* const outStream)
+int PutLine(LineType line, FILE* const outStream)
 {
-    assert(str);
+    assert(line.line);
     assert(outStream);
 
-    while (*str != separator && *str != '\0')
+    const char* lineIterator = line.line;
+
+    while (*lineIterator != line.lineEnding && *lineIterator != '\0')
     {
-        int printingError = putc(*str, outStream);
+        int printingError = putc(*lineIterator, outStream);
 
         if (printingError == EOF)
             return printingError;
         
-        ++str;
+        ++lineIterator;
     }
 
     return putc('\n', outStream);
@@ -179,11 +181,11 @@ void TextTypeDestructor(TextType* const text)
     text->text = nullptr;
 
     assert(text);
-    free(text->linesArr);
-    text->linesArr = nullptr;
+    free(text->lines);
+    text->lines = nullptr;
 
     assert(text);
-    text->linesArr = 0;
+    text->linesCnt = 0;
 }
 
 //------------------------------------------------------------------------------------------------

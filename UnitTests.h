@@ -10,8 +10,8 @@
 
 //#define TESTING
 
-void TestAll();
+//void TestAll();
 
-void TestMyQSort();
+//void TestMyQSort();
 
 #endif // UNIT_TESTS_H

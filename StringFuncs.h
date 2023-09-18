@@ -18,9 +18,9 @@
 /// @param [in]text text to parse on strings
 /// @param [in]separator separator to separate strings
 /// @param [out]arrSize - number of elements in returned pointers array. 
-/// @return dynamic array containg pointers to the strings in text array
+/// @return dynamic array containg pointers to the lines in text array
 /// @attention Creates dynamic array 
-const char** BuildLinesArr(const char* text, const char separator, size_t* arrSize);
+LineType* BuildLinesArr(const char* text, const char separator, size_t* arrSize);
 
 //------------------------------------------------------------------------------------------------
 

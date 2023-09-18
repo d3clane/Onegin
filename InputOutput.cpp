@@ -19,7 +19,7 @@ int ReadTextAndParse(TextType* text, FILE* const inStream)
     if (tmp) 
         text->text = tmp;
         
-    //text->lines = BuildLinesArr(text->text, '\n', &(text->linesCnt));
+    text->lines = BuildLinesArr(text->text, '\n', &(text->linesCnt));
 
     if (text->lines == nullptr)
         return -1;

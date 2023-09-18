@@ -14,32 +14,6 @@
 
 //------------------------------------------------------------------------------------------------
 
-/// @brief Contains info about line (her ending and length)
-struct LineType
-{
-    const char* line;       ///< string line
-    char lineEnding;        ///< symbol on which line is ending
-    size_t lineLength;      ///< line length
-};
-
-/// @brief Contains info for working with big texts from the file
-struct TextType
-{    
-    char *text;                 ///< Dynamic array containing text from file
-    size_t textSz;              ///< number of elements in text var
-    
-    LineType* lines;                /// Dynamic arr with pointers to the lines
-    size_t linesCnt;            ///< number of elements in ptrArr
-};
-
-/// @brief Destructs text
-///
-/// @details Free all dynamic arrays
-/// @param [out]text structure to destruct
-void TextTypeDestructor(TextType* text);
-
-//------------------------------------------------------------------------------------------------
-
 /// @brief reads text from the inStream and parses it to the strings.
 ///
 /// @details read text, unite all '\n' symbols that goes in a row in one '\n' and parses this on strings

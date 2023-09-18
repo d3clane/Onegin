@@ -40,7 +40,7 @@ LineType* BuildLinesArr(const char* text, const char separator, size_t* arrSize)
             assert(lineIndex > 0);
             lines[lineIndex].lineEnding     = '\n';
             lines[lineIndex].line           = textIterator + 1;
-            lines[lineIndex - 1].lineLength = lines[lineIndex].line - lines[lineIndex - 1].line;
+            lines[lineIndex - 1].lineLength = (size_t) (lines[lineIndex].line - lines[lineIndex - 1].line);
 
             ++lineIndex;
         }
@@ -48,7 +48,7 @@ LineType* BuildLinesArr(const char* text, const char separator, size_t* arrSize)
     }
     
     *arrSize = lineIndex;
-    lines[lineIndex].lineLength  = textIterator - lines[lineIndex].line;
+    lines[lineIndex].lineLength = (size_t) (textIterator - lines[lineIndex].line);
 
     return lines;
 }

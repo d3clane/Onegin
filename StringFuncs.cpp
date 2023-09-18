@@ -41,14 +41,16 @@ LineType* BuildLinesArr(const char* text, const char separator, size_t* arrSize)
             lines[lineIndex].lineEnding     = '\n';
             lines[lineIndex].line           = textIterator + 1;
             lines[lineIndex - 1].lineLength = (size_t) (lines[lineIndex].line - lines[lineIndex - 1].line);
-
             ++lineIndex;
         }
         ++textIterator;
     }
     
     *arrSize = lineIndex;
-    lines[lineIndex].lineLength = (size_t) (textIterator - lines[lineIndex].line);
+
+    assert(lineIndex > 0);
+    assert(lineIndex - 1 < linesCnt);
+    lines[lineIndex - 1].lineLength = 1; // \0 symbol at the end
 
     return lines;
 }

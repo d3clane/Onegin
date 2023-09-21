@@ -51,12 +51,10 @@ void MyQSort(int arr[], const size_t arrSize, size_t left, size_t right)
     assert(arrSize > 0);
     assert(left <= right);
     
-    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
-    
     size_t mid = left;
+
     if (right > left) mid = Partition(arr, arrSize, left, right);
 
-    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
     if (left < mid) MyQSort(arr, arrSize, left, mid);
 
     if (mid + 1 < right) MyQSort(arr, arrSize, mid + 1, right);
@@ -75,12 +73,8 @@ void MyQSort(LineType* lines, const size_t linesCnt, size_t left, size_t right,
     assert(linesCnt > 0);
     assert(left <= right);
     
-    //printf(ColorText(GREENTEXT, "%zu - %zu: %zu\n"), left, right, arrSize);
-    
     size_t mid = left;
     if (right > left) mid = Partition(lines, linesCnt, left, right, cmp);
-
-    //printf(ColorText(YELLOWTEXT, "%zu: %zu\n"), mid, left);
     
     if (left < mid) MyQSort(lines, linesCnt, left, mid, cmp);
 
@@ -357,7 +351,6 @@ int StrCmp(const void* str1, const void* str2)
 
 //------------------------------------------------------------------------------------------------
 
-// ub но оставлю потому что жалко убирать(
 #define COPY(A, B, TYPE)                      \
 {                                             \
     TYPE temp = 0;                            \
@@ -367,8 +360,8 @@ int StrCmp(const void* str1, const void* str2)
            memcpy(a, b, sizeof(temp));        \
               memcpy(b, &temp, sizeof(temp)); \
                                               \
-    A += sizeof(uint16_t);                    \
-    B += sizeof(uint16_t);                    \
+    A += sizeof(TYPE);                        \
+    B += sizeof(TYPE);                        \
 }
 
 void Swap(void *aVoid, void *bVoid, const size_t size) 
@@ -381,10 +374,6 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
     uint8_t* a = (uint8_t*) aVoid;
     uint8_t* b = (uint8_t*) bVoid;
 
-    /*
-    long a_addr = (long) a;
-    intptr_t b_addr = (intptr_t) b;
-    */
     uint64_t* a_ll = (uint64_t*) a;
     uint64_t* b_ll = (uint64_t*) b;
     uint64_t tmp = 0;
@@ -403,13 +392,24 @@ void Swap(void *aVoid, void *bVoid, const size_t size)
     b = (uint8_t*) (b_ll + sizeInQWords);
 
     if (size & (uint32_t) 4)
+    {
         COPY(a, b, uint32_t);
-
+        a += sizeof(uint32_t);
+        b += sizeof(uint32_t);
+    }
     if (size & (uint16_t) 2)
+    {
         COPY(a, b, uint16_t);
+        a += sizeof(uint16_t);
+        b += sizeof(uint16_t);
+    }
 
     if (size & (uint8_t) 1)
+    {
         COPY(a, b, uint8_t);
+    }
+
+    
 }
 
 #undef COPY

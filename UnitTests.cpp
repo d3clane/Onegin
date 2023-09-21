@@ -13,13 +13,13 @@ void TestMyQSort()
     FILE* inStream1 = TryOpenFile(fileTest, "rb");
     if (IsFatalError()) return;
 
-    ReadTextAndParse(&text1, inStream1);
+    TextTypeCtor(&text1, inStream1);
     if (IsFatalError()) return;
 
     FILE* inStream2 = TryOpenFile(fileTest, "rb");
     if (IsFatalError()) return;
 
-    ReadTextAndParse(&text2, inStream2);
+    TextTypeCtor(&text2, inStream2);
     if (IsFatalError()) return;
 
     MyQSort(text1.lines, text1.linesCnt, 0, text1.linesCnt - 1, StrCmp);

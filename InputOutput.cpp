@@ -10,7 +10,7 @@
 //------------------------------------------------------------------------------------------------
 
 
-int ReadTextFromFileAndParse(TextType* text, const char* const fileName)
+int TextTypeCtor(TextType* text, const char* const fileName)
 {
     FILE* inStream = TryOpenFile(fileName, "rb");
 
@@ -20,7 +20,7 @@ int ReadTextFromFileAndParse(TextType* text, const char* const fileName)
         return -1;
     }
 
-    int retVal = ReadTextAndParse(text, inStream);
+    int retVal = TextTypeCtor(text, inStream);
 
     fclose(inStream);
 
@@ -29,7 +29,7 @@ int ReadTextFromFileAndParse(TextType* text, const char* const fileName)
 
 //------------------------------------------------------------------------------------------------
 
-int ReadTextAndParse(TextType* text, FILE* const inStream)
+int TextTypeCtor(TextType* text, FILE* const inStream)
 {
     assert(text);
     assert(inStream);

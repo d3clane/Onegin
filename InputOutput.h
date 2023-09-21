@@ -32,12 +32,12 @@ void TextTypeDestructor(TextType* text);
 
 //------------------------------------------------------------------------------------------------
 
-/// @brief opens file with fileName and calls ReadTextAndParse(text, fp);
+/// @brief opens file with fileName and calls TextTypeCtor(text, fp);
 ///
 /// @param [out]text struct to fill
 /// @param [in]fileName file to open
 /// @return ReadTextAndParse result
-int ReadTextFromFileAndParse(TextType* text, const char* const fileName);
+int TextTypeCtor(TextType* text, const char* const fileName);
 
 //------------------------------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ int ReadTextFromFileAndParse(TextType* text, const char* const fileName);
 /// @param [in]inFileName file name to open to read from
 /// @return 0 if no errors occurred otherwise not 0
 /// @attention Creates dynamic arrays in text structure
-int ReadTextAndParse(TextType* text, FILE* const inStream);
+int TextTypeCtor(TextType* text, FILE* const inStream);
 
 //------------------------------------------------------------------------------------------------
 

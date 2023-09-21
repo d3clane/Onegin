@@ -30,7 +30,7 @@ int main()
 
     const char* const inFileName = "Onegin.txt";
 
-    ReadTextFromFileAndParse(&text, inFileName);
+    TextTypeCtor(&text, inFileName);
     IF_ERR_PRINT("Reading text from file and parsing error.\n");
     
     //--------------------

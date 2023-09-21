@@ -34,11 +34,15 @@ int TextTypeCtor(TextType* text, FILE* const inStream)
     assert(text);
     assert(inStream);
     
+    // reading:
+
     text->text = ReadText(inStream);
 
     if (text->text == nullptr)
         return -1;
-    
+
+    // preparing text:
+
     const size_t newTextSize = UniteChars(text->text, '\n');
 
     char* const tmp = (char*) realloc(text->text, newTextSize * sizeof(*(text->text)));
@@ -50,12 +54,11 @@ int TextTypeCtor(TextType* text, FILE* const inStream)
 
     text->textSz = newTextSize - 1;
 
+    // parsing on lines:
+
     text->lines = BuildLinesArr(text->text, '\n', &(text->linesCnt));
 
-    if (text->lines == nullptr)
-        return -1;
-
-    return 0;
+    return text->lines? 0 : -1;
 }
 
 //------------------------------------------------------------------------------------------------

@@ -20,7 +20,7 @@ struct TextType
     char *text;                 ///< Dynamic array containing text from file
     size_t textSz;              ///< number of elements in text var
     
-    LineType* lines;                /// Dynamic arr with pointers to the lines
+    LineType* lines;            ///< Dynamic arr with pointers to the lines
     size_t linesCnt;            ///< number of elements in ptrArr
 };
 

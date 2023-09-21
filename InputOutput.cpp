@@ -1,6 +1,14 @@
+
+#include <assert.h>
+#include <stdio.h>
+#include <sys/stat.h>
+
+#include "Colors.h"
 #include "InputOutput.h"
+#include "StringFuncs.h"
 
 //------------------------------------------------------------------------------------------------
+
 
 int ReadTextFromFileAndParse(TextType* text, const char* const fileName)
 {
@@ -37,14 +45,16 @@ int ReadTextAndParse(TextType* text, FILE* const inStream)
     
     if (tmp) 
         text->text = tmp;
-        
+    else 
+        return -1;
+
+    text->textSz = newTextSize - 1;
+
     text->lines = BuildLinesArr(text->text, '\n', &(text->linesCnt));
 
     if (text->lines == nullptr)
         return -1;
 
-    text->textSz = newTextSize - 1;
-    
     return 0;
 }
 
@@ -54,14 +64,14 @@ char* ReadText(FILE* const inStream)
 {
     assert(inStream);
 
-    long tmpFileSize = GetFileSize(inStream);
+    size_t fileSize = GetFileSize(inStream);
     
-    if (tmpFileSize == -1)
+    if (fileSize == 0)
         return nullptr;
 
-    const size_t fileSize = (size_t) tmpFileSize + 1;
+    const size_t bufSize = (size_t) fileSize + 1;
 
-    char* text = (char*) calloc(fileSize, sizeof(*text)); 
+    char* text = (char*) calloc(bufSize, sizeof(*text)); 
 
     if (text == nullptr)
     {
@@ -71,9 +81,10 @@ char* ReadText(FILE* const inStream)
 
     size_t nRead = fread(text, sizeof(char), fileSize, inStream);
 
-    assert(nRead == fileSize - 1);
+    assert(nRead == fileSize);
 
-    text[fileSize - 1] = '\0';
+    assert(bufSize > 0);
+    text[bufSize - 1] = '\0';
 
     return text;
 }
@@ -117,7 +128,7 @@ size_t PrintText(const char* const text, const size_t length, FILE* const outStr
 
 //------------------------------------------------------------------------------------------------
 
-off_t GetFileSize(const char *const fileName)
+size_t GetFileSize(const char *const fileName)
 {
     assert(fileName);
 
@@ -126,30 +137,41 @@ off_t GetFileSize(const char *const fileName)
     int statError = stat(fileName, &fileStats);
 
     if (statError)
+    {
         UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
-
-    if (statError) return -1;
-    return fileStats.st_size;
+        return 0;
+    }
+    
+    return (size_t) fileStats.st_size;
 }
 
 //------------------------------------------------------------------------------------------------
 
-long GetFileSize(FILE* const fp)
+size_t GetFileSize(FILE* const fp)
 {
     assert(fp);
     
     if (fseek(fp, 0, SEEK_END) != 0)
+    {
         UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
+        return 0;
+    }
 
     long fileSz = ftell(fp);
 
     if (fileSz == -1)
+    {
         UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
-    
-    if (fseek(fp, 0, SEEK_SET) != 0)
-        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
+        return 0;
+    }
 
-    return fileSz;
+    if (fseek(fp, 0, SEEK_SET) != 0)
+    {
+        UPDATE_ERR(Errors::GETTING_FILE_SIZE_ERR);
+        return 0;
+    }
+
+    return (size_t) fileSz;
 }
 
 //------------------------------------------------------------------------------------------------

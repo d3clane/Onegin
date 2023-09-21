@@ -24,6 +24,7 @@ enum class Errors
 {
     NO_ERR                 =  0,
     
+    HDHDHDH, 
     GETTING_FILE_SIZE_ERR  =  3,
     FILE_OPENING_ERR       =  1,
     PRINTING_TO_FILE_ERR   =  4,
@@ -44,6 +45,7 @@ struct ErrorInfoType
 {
     Errors error; ///< error code
     char fileWithError[MAX_MY_FILE_NAME]; ///< __FILE__ (file name with error)
+    // ^----- const char*
     int lineWithError; ///< __LINE__ (line with error)
 };
 

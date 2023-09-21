@@ -1,3 +1,8 @@
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "Errors.h"
 #include "StringFuncs.h"
 
 //------------------------------------------------------------------------------------------------

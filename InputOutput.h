@@ -4,13 +4,31 @@
 /// @file 
 /// @brief Contains functions to work with input and output for text input
 
-#include <assert.h>
-#include <stdio.h>
-#include <sys/stat.h>
-
-#include "Colors.h"
 #include "Errors.h"
-#include "StringFuncs.h"
+
+/// @brief Contains info about line (her ending and length)
+struct LineType
+{
+    const char* line;       ///< string line
+    char lineEnding;        ///< symbol on which line is ending
+    size_t lineLength;      ///< line length
+};
+
+/// @brief Contains info for working with big texts from the file
+struct TextType
+{    
+    char *text;                 ///< Dynamic array containing text from file
+    size_t textSz;              ///< number of elements in text var
+    
+    LineType* lines;                /// Dynamic arr with pointers to the lines
+    size_t linesCnt;            ///< number of elements in ptrArr
+};
+
+/// @brief Destructs text
+///
+/// @details Free all dynamic arrays
+/// @param [out]text structure to destruct
+void TextTypeDestructor(TextType* text);
 
 //------------------------------------------------------------------------------------------------
 
@@ -67,7 +85,7 @@ size_t PrintText(const char* const text, const size_t length, FILE* const outStr
 ///
 /// @param [in]fileName to get size
 /// @return -1 if error occurred otherwise file size in bytes
-off_t GetFileSize(const char* const fileName);
+size_t GetFileSize(const char* const fileName);
 
 //------------------------------------------------------------------------------------------------
 
@@ -75,7 +93,7 @@ off_t GetFileSize(const char* const fileName);
 ///
 /// @param [in]fp file pointer to count bytes in
 /// @return 
-long GetFileSize(FILE* const fp);
+size_t GetFileSize(FILE* const fp);
 
 //------------------------------------------------------------------------------------------------
 
